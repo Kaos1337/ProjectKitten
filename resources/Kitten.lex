@@ -195,6 +195,8 @@ String myString = "";
 <YYINITIAL>":="         {return tok(sym.ASSIGN, null);}
 <YYINITIAL>"*/"         {err("Unopen comment");}
 <YYINITIAL>test         {return tok(sym.TEST, null);}
+<YYINITIAL>fixture      {return tok(sym.FIXTURE, null);}
+<YYINITIAL>assert       {return tok(sym.ASSERT, null);}
 <YYINITIAL>[a-zA-Z][a-zA-Z0-9_]*
                         {return tok(sym.ID, yytext());}
 <YYINITIAL>[0-9]+       {return tok(sym.INTEGER, new Integer(yytext()));}

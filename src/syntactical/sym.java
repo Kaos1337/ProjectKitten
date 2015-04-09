@@ -60,5 +60,8 @@ public class sym {
   public static final int FALSE = 49;
   public static final int AS = 18;
   public static final int GT = 34;
+  public static final int TEST = 51;
+  public static final int FIXTURE = 52;
+  public static final int ASSERT = 53;
 }
 

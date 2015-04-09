@@ -68,7 +68,7 @@ terminal CLASS, EXTENDS, FIELD, METHOD, CONSTRUCTOR, NEW,
 	 LBRACK, RBRACK, LBRACE, RBRACE, DOT, PLUS, MINUS, 
 	 TIMES, DIVIDE, EQ, NEQ, LT, LE, GT, GE, AND, OR, NOT,
 	 ASSIGN, ARRAYSYMBOL, IF, THEN, ELSE, WHILE, FOR, 
-	 RETURN, NIL, TRUE, FALSE, UMINUS, TEST;
+	 RETURN, NIL, TRUE, FALSE, UMINUS, TEST, FIXTURE, ASSERT;
 
 
 //           abstract syntax class   non-terminal
@@ -206,7 +206,13 @@ com ::=
    | LBRACE:p RBRACE
      {: RESULT = new Skip(pleft); :}
    | exp:receiver DOT:d ID:name LPAREN expseq:actuals RPAREN
-     {: RESULT = new MethodCallCommand(dleft, receiver, name, actuals); :} ;
+     {: RESULT = new MethodCallCommand(dleft, receiver, name, actuals); :}
+   | TEST:t ID:id com:body 
+     {: RESULT = new Test(tleft, body); :}
+   | FIXTURE:f com:body 
+     {: RESULT = new Fixture(fleft, body); :}
+   | ASSERT:a LPAREN exp:condition RPAREN
+     {: RESULT = new Assert(aleft, condition); :} ;
 
 // a non-empty sequence of commands
 
