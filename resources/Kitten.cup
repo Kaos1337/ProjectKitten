@@ -162,7 +162,11 @@ class_members ::=
    | METHOD:m typeplus:returnType ID:name LPAREN formals:formals RPAREN
        com:body class_members:next
      {: RESULT = new MethodDeclaration
-	(mleft, returnType, name, formals, body, next); :} ;
+	(mleft, returnType, name, formals, body, next); :}
+   | TEST:t ID:id com:body class_members:next
+     {: RESULT = new Test(tleft, body, next); :}
+   | FIXTURE:f com:body class_members:next
+     {: RESULT = new Fixture(fleft, body, next); :} ;
 
 // a comma-separated and possibly empty list
 // of formal parameters of a method or constructor
@@ -206,11 +210,7 @@ com ::=
    | LBRACE:p RBRACE
      {: RESULT = new Skip(pleft); :}
    | exp:receiver DOT:d ID:name LPAREN expseq:actuals RPAREN
-     {: RESULT = new MethodCallCommand(dleft, receiver, name, actuals); :}
-   | TEST:t ID:id com:body 
-     {: RESULT = new Test(tleft, body); :}
-   | FIXTURE:f com:body 
-     {: RESULT = new Fixture(fleft, body); :}
+     {: RESULT = new MethodCallCommand(dleft, receiver, name, actuals); :} 
    | ASSERT:a LPAREN exp:condition RPAREN
      {: RESULT = new Assert(aleft, condition); :} ;
 

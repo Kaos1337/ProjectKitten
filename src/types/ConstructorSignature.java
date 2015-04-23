@@ -10,6 +10,7 @@ import org.apache.bcel.generic.MethodGen;
 
 import translation.Block;
 import absyn.ConstructorDeclaration;
+import absyn.Test;
 import bytecode.CONSTRUCTORCALL;
 import bytecode.LOAD;
 
