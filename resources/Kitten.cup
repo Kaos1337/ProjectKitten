@@ -164,9 +164,9 @@ class_members ::=
      {: RESULT = new MethodDeclaration
 	(mleft, returnType, name, formals, body, next); :}
    | TEST:t ID:id com:body class_members:next
-     {: RESULT = new Test(tleft, body, next); :}
+     {: RESULT = new TestDeclaration(tleft, id, body, next); :}
    | FIXTURE:f com:body class_members:next
-     {: RESULT = new Fixture(fleft, body, next); :} ;
+     {: RESULT = new FixtureDeclaration(fleft, body, next); :} ;
 
 // a comma-separated and possibly empty list
 // of formal parameters of a method or constructor

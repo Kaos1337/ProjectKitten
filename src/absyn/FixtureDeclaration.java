@@ -9,52 +9,48 @@ import types.TypeList;
 import types.VoidType;
 
 /**
- * A node of abstract syntax representing the declaration of a constructor
+ * A node of abstract syntax representing the declaration of a fixture
  * of a Kitten class.
  *
- * @author <A HREF="mailto:fausto.spoto@univr.it">Fausto Spoto</A>
+ * @author Comencini Marco, Marretta Francesco, Zuliani Davide
  */
 
-public class Fixture extends CodeDeclaration {
+public class FixtureDeclaration extends CodeDeclaration {
 
 	/**
-	 * Constructs the abstract syntax of a constructor declaration.
+	 * Constructs the abstract syntax of a fixture declaration.
 	 *
 	 * @param pos the starting position in the source file of
 	 *            the concrete syntax represented by this abstract syntax
-	 * @param formals the abstract syntax of the formal parameters
-	 *                of the constructor
 	 * @param body the abstract syntax of the body of the constructor
 	 * @param next the abstract syntax of the declaration of the
 	 *             subsequent class member, if any
 	 */
 
-	public Fixture(int pos, Command body, ClassMemberDeclaration next) {
+	public FixtureDeclaration(int pos, Command body, ClassMemberDeclaration next) {
 		super(pos, null, body, next);
 	}
 
 	/**
-	 * Yields the signature of this constructor declaration.
+	 * Yields the signature of this fixture declaration.
 	 *
 	 * @return the signature of this constructor declaration.
 	 *         Yields {@code null} if type-checking has not been performed yet
 	 */
 
-	@Override
+	/*@Override
 	public ConstructorSignature getSignature() {
 		return (ConstructorSignature) super.getSignature();
-	}
+	}*/
 
 	/**
 	 * Adds arcs between the dot node for this piece of abstract syntax
-	 * and those representing the formal parameters and body of the constructor.
+	 * and those representing the body of the constructor.
 	 *
 	 * @param where the file where the dot representation must be written
 	 */
 
 	protected void toDotAux(FileWriter where) throws java.io.IOException {
-		if (getFormals() != null)
-			linkToNode("formals", getFormals().toDot(where), where);
 
 		linkToNode("body", getBody().toDot(where), where);
 	}
@@ -75,7 +71,8 @@ public class Fixture extends CodeDeclaration {
 		// we record the signature of this constructor inside this abstract syntax
 		//setSignature(cSig);
 	}
-
+	
+	// TODO
 	/**
 	 * Type-checks this constructor declaration. Namely, it builds a type-checker
 	 * whose only variable in scope is {@code this} of the defining class of the

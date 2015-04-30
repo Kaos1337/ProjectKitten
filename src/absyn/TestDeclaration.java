@@ -9,28 +9,31 @@ import types.TypeList;
 import types.VoidType;
 
 /**
- * A node of abstract syntax representing the declaration of a constructor
+ * A node of abstract syntax representing the declaration of a test
  * of a Kitten class.
  *
- * @author <A HREF="mailto:fausto.spoto@univr.it">Fausto Spoto</A>
+ * @author Comencini Marco, Marretta Francesco, Zuliani Davide
  */
 
-public class Test extends CodeDeclaration {
 
+public class TestDeclaration extends CodeDeclaration {
+
+	private final String name;
+	
 	/**
 	 * Constructs the abstract syntax of a constructor declaration.
 	 *
 	 * @param pos the starting position in the source file of
 	 *            the concrete syntax represented by this abstract syntax
-	 * @param formals the abstract syntax of the formal parameters
-	 *                of the constructor
+	 * @param id the name of the test
 	 * @param body the abstract syntax of the body of the constructor
 	 * @param next the abstract syntax of the declaration of the
 	 *             subsequent class member, if any
 	 */
-
-	public Test(int pos, Command body, ClassMemberDeclaration next) {
+	
+	public TestDeclaration(int pos, String id, Command body, ClassMemberDeclaration next) {
 		super(pos, null, body, next);
+		this.name = id;
 	}
 
 	/**
@@ -47,14 +50,14 @@ public class Test extends CodeDeclaration {
 
 	/**
 	 * Adds arcs between the dot node for this piece of abstract syntax
-	 * and those representing the formal parameters and body of the constructor.
+	 * and those representing the name and body of the test.
 	 *
 	 * @param where the file where the dot representation must be written
 	 */
 
 	protected void toDotAux(FileWriter where) throws java.io.IOException {
-		if (getFormals() != null)
-			linkToNode("formals", getFormals().toDot(where), where);
+		
+		linkToNode("name", toDot(name, where), where);
 
 		linkToNode("body", getBody().toDot(where), where);
 	}
@@ -71,6 +74,7 @@ public class Test extends CodeDeclaration {
 		
 	}
 
+	//TODO fdfdfd
 	/**
 	 * Type-checks this constructor declaration. Namely, it builds a type-checker
 	 * whose only variable in scope is {@code this} of the defining class of the

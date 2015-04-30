@@ -10,9 +10,9 @@ import types.VoidType;
 import bytecode.RETURN;
 
 /**
- * A node of abstract syntax representing a {@code return} command.
+ * A node of abstract syntax representing a {@code assert} command.
  *
- * @author <A HREF="mailto:fausto.spoto@univr.it">Fausto Spoto</A>
+ * @author Comencini Marco, Marretta Francesco, Zuliani Davide
  */
 
 public class Assert extends Command {
@@ -51,16 +51,15 @@ public class Assert extends Command {
 
 	/**
 	 * Adds abstract syntax class-specific information in the dot file
-	 * representing the abstract syntax of the {@code return} command.
-	 * This amounts to adding an arc from the node for the {@code return}
-	 * command to the abstract syntax for {@link #returned}, if any.
+	 * representing the abstract syntax of the {@code assert} command.
+	 * This amounts to adding an arc from the node for the {@code assert}
+	 * command to the abstract syntax for {@link #returned}.
 	 *
 	 * @param where the file where the dot representation must be written
 	 */
 
 	@Override
 	protected void toDotAux(FileWriter where) throws java.io.IOException {
-		if (returned != null)
 			linkToNode("returned", returned.toDot(where), where);
 	}
 
@@ -80,7 +79,7 @@ public class Assert extends Command {
 
 	@Override
 	protected TypeChecker typeCheckAux(TypeChecker checker) {
-		// we get from the type-checker the expected type for the return instructions
+		/*// we get from the type-checker the expected type for the return instructions
 		Type expectedReturnType = checker.getReturnType();
 
 		// a return command without expression is legal only inside a void method
@@ -94,14 +93,14 @@ public class Assert extends Command {
 				!returnedType.canBeAssignedTo(expectedReturnType))
 			error("illegal return type: " + expectedReturnType + " expected");
 
-		return checker;
+		return checker;*/
 	}
 
 	/**
-	 * Checks that this {@code return} command does not contain <i>dead-code</i>, that is,
-	 * commands that can never be executed. This is always true for {@code return} commands.
+	 * Checks that this {@code assert} command does not contain <i>dead-code</i>, that is,
+	 * commands that can never be executed. This is always true for {@code assert} commands.
 	 *
-	 * @return true, since this command always terminates with a {@code return} command (itself)
+	 * @return true, since this command doesn't contain commands. 
 	 */
 
 	@Override
@@ -109,6 +108,7 @@ public class Assert extends Command {
 		return true;
 	}
 
+	//TODO
 	/**
 	 * Translates this command into intermediate Kitten bytecode. Namely,
 	 * it returns a code which starts with the evaluation of {@link #returned},
