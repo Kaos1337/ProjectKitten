@@ -66,6 +66,9 @@ public final class ClassType extends ReferenceType {
 	 */
 
 	private final Map<String, Set<MethodSignature>> methods = new HashMap<>();
+	
+	private final Map<String, TestSignature> tests = new HashMap<>();
+	private final Set<FixtureSignature> fixtures = new HashSet<>();
 
 	/**
 	 * The utility for issuing errors about this class.
@@ -309,6 +312,29 @@ public final class ClassType extends ReferenceType {
 		// we add this new method
 		set.add(sig);
 	}
+	
+	
+	/**
+	 * Adds a test to this class. If a test with the given
+	 * signature already existed, it is overwritten.
+	 *
+	 * @param sig the signature of the test
+	 */
+
+	public final void addTest(String name, TestSignature sig) {
+		tests.put(name, sig);
+	}
+	
+	/**
+	 * Adds a fixture to this class. If a fixture with the given
+	 * signature already existed, it is overwritten.
+	 *
+	 * @param sig the signature of the fixture
+	 */
+
+	public final void addFixture(FixtureSignature sig) {
+		fixtures.add(sig);
+	}
 
 	/**
 	 * Yields the fields of this class.
@@ -424,6 +450,29 @@ public final class ClassType extends ReferenceType {
 		// otherwise, we look up in the superclass, if any
 		return superclass == null ? null : superclass.methodLookup(name, formals);
 	}
+	
+	
+	/**
+	 * Looks up from this class for the signature of the method
+	 * with exactly the given name and parameters types, if any.
+	 *
+	 * @param name the name of the method to look up for
+	 * @param formals the types of the formal parameters of the method
+	 * @return the signature of the method, as defined in this class or
+	 *         in one of its superclasses. Yields {@code null} if no
+	 *         such method has been found
+	 */
+
+	public final TestSignature testLookup(String name) {
+		// Non si eredita, quindi non faccio ricerche in classi superiori
+		return tests.get(name);
+	}
+	
+	public final Set<FixtureSignature> fixtureLookup() {
+		return fixtures;
+	}
+	
+	
 
 	/**
 	 * Looks up from this class for the signatures of all methods

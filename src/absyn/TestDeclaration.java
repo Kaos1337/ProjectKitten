@@ -4,7 +4,7 @@ import java.io.FileWriter;
 
 import semantical.TypeChecker;
 import types.ClassType;
-import types.ConstructorSignature;
+import types.TestSignature;
 import types.TypeList;
 import types.VoidType;
 
@@ -71,7 +71,12 @@ public class TestDeclaration extends CodeDeclaration {
 
 	@Override
 	protected void addTo(ClassType clazz) {
-		
+		TestSignature sg = new TestSignature(clazz, name, this);
+
+		clazz.addTest(name, sg);
+
+		// we record the signature of this test inside this abstract syntax
+		setSignature(sg);
 	}
 
 	//TODO fdfdfd

@@ -94,6 +94,7 @@ public class Assert extends Command {
 			error("illegal return type: " + expectedReturnType + " expected");
 
 		return checker;*/
+		return null;
 	}
 
 	/**

@@ -10,6 +10,7 @@ import org.apache.bcel.generic.MethodGen;
 
 import translation.Block;
 import absyn.ConstructorDeclaration;
+import absyn.FixtureDeclaration;
 import bytecode.CONSTRUCTORCALL;
 import bytecode.LOAD;
 
@@ -19,7 +20,7 @@ import bytecode.LOAD;
  * @author <A HREF="mailto:fausto.spoto@univr.it">Fausto Spoto</A>
  */
 
-public class ConstructorSignature extends CodeSignature {
+public class FixtureSignature extends CodeSignature {
 
 	/**
 	 * Constructs a signature for a constructor, given its parameters types
@@ -30,9 +31,9 @@ public class ConstructorSignature extends CodeSignature {
 	 * @param abstractSyntax the abstract syntax of the declaration of this constructor
 	 */
 
-	public ConstructorSignature(ClassType clazz, TypeList parameters, ConstructorDeclaration abstractSyntax) {
+	public FixtureSignature(ClassType clazz, FixtureDeclaration abstractSyntax) {
 		// a constructor always returns void and its name is by default init
-		super(clazz, VoidType.INSTANCE, parameters, "<init>", abstractSyntax);
+		super(clazz, VoidType.INSTANCE, null, "fixture", abstractSyntax);
 	}
 
 	@Override

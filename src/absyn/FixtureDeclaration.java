@@ -4,7 +4,7 @@ import java.io.FileWriter;
 
 import semantical.TypeChecker;
 import types.ClassType;
-import types.ConstructorSignature;
+import types.FixtureSignature;
 import types.TypeList;
 import types.VoidType;
 
@@ -38,10 +38,10 @@ public class FixtureDeclaration extends CodeDeclaration {
 	 *         Yields {@code null} if type-checking has not been performed yet
 	 */
 
-	/*@Override
-	public ConstructorSignature getSignature() {
-		return (ConstructorSignature) super.getSignature();
-	}*/
+	@Override
+	public FixtureSignature getSignature() {
+		return (FixtureSignature) super.getSignature();
+	}
 
 	/**
 	 * Adds arcs between the dot node for this piece of abstract syntax
@@ -64,12 +64,12 @@ public class FixtureDeclaration extends CodeDeclaration {
 
 	@Override
 	protected void addTo(ClassType clazz) {
-		//ConstructorSignature cSig = new ConstructorSignature (clazz, getFormals() != null ? getFormals().toType() : TypeList.EMPTY, this);
+		FixtureSignature sig = new FixtureSignature (clazz, this);
 
-		//clazz.addConstructor(cSig);
+		clazz.addFixture(sig);
 
 		// we record the signature of this constructor inside this abstract syntax
-		//setSignature(cSig);
+		setSignature(sig);
 	}
 	
 	// TODO
