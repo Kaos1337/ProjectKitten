@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import semantical.TypeChecker;
 import types.ClassType;
 import types.TestSignature;
-import types.TypeList;
 import types.VoidType;
 
 /**
@@ -36,17 +35,6 @@ public class TestDeclaration extends CodeDeclaration {
 		this.name = id;
 	}
 
-	/**
-	 * Yields the signature of this constructor declaration.
-	 *
-	 * @return the signature of this constructor declaration.
-	 *         Yields {@code null} if type-checking has not been performed yet
-	 */
-
-	/*@Override
-	public ConstructorSignature getSignature() {
-		return (ConstructorSignature) super.getSignature();
-	}*/
 
 	/**
 	 * Adds arcs between the dot node for this piece of abstract syntax
@@ -72,14 +60,10 @@ public class TestDeclaration extends CodeDeclaration {
 	@Override
 	protected void addTo(ClassType clazz) {
 		TestSignature sg = new TestSignature(clazz, name, this);
-
 		clazz.addTest(name, sg);
-
-		// we record the signature of this test inside this abstract syntax
 		setSignature(sg);
 	}
 
-	//TODO fdfdfd
 	/**
 	 * Type-checks this constructor declaration. Namely, it builds a type-checker
 	 * whose only variable in scope is {@code this} of the defining class of the
@@ -89,16 +73,11 @@ public class TestDeclaration extends CodeDeclaration {
 	 *
 	 * @param clazz the semantical type of the class where this constructor occurs.
 	 */
-
 	@Override
 	protected void typeCheckAux(ClassType clazz) {
-		FormalParameters formals = getFormals();
-
-		TypeChecker checker = new TypeChecker(VoidType.INSTANCE, clazz.getErrorMsg());
-		checker = checker.putVar("this", clazz);
-		// we enrich the type-checker with the formal parameters
-		if (formals != null)
-			checker = formals.typeCheck(checker);
+		
+		// creo un checker che permetta gli assert
+		TypeChecker checker = new TypeChecker(VoidType.INSTANCE, clazz.getErrorMsg(), true);
 
 		// we type-check the body of the constructor in the resulting type-checker
 		getBody().typeCheck(checker);
@@ -106,13 +85,5 @@ public class TestDeclaration extends CodeDeclaration {
 		// we check that there is no dead-code in the body of the constructor
 		getBody().checkForDeadcode();
 
-		// if our superclass exists, it must contain an empty constructor,
-		// that will be chained to this constructor
-		if (clazz.getSuperclass() != null && clazz.getSuperclass().constructorLookup(TypeList.EMPTY) == null)
-			error(checker, clazz.getSuperclass() + " has no empty constructor");
-
-		// constructors return nothing, so that we do not check whether
-		// a return statement is always present at the end of every
-		// syntactical execution path in the body of a constructor
 	}
 }

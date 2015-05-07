@@ -146,7 +146,7 @@ public class MethodDeclaration extends CodeDeclaration {
 		// clazz and the parameters of the method, and
 		// where return instructions of type returnType are allowed
 		checker = new TypeChecker(rt,clazz.getErrorMsg());
-
+	
 		// the main method is the only <i>static</i> method, where there is no this variable
 		if (!getSignature().getName().equals("main"))
 			checker = checker.putVar("this", clazz);

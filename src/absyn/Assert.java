@@ -4,9 +4,9 @@ import java.io.FileWriter;
 
 import semantical.TypeChecker;
 import translation.Block;
+import types.BooleanType;
 import types.CodeSignature;
 import types.Type;
-import types.VoidType;
 import bytecode.RETURN;
 
 /**
@@ -21,7 +21,7 @@ public class Assert extends Command {
 	 * The abstract syntax of the expression whose value is returned. It might be {@code null}.
 	 */
 
-	private Expression returned;
+	private Expression condition;
 
 	/**
 	 * Constructs the abstract syntax of a {@code return} command.
@@ -32,21 +32,10 @@ public class Assert extends Command {
 	 *                 is returned. It might be {@code null}
 	 */
 
-	public Assert(int pos, Expression returned) {
+	public Assert(int pos, Expression condition) {
 		super(pos);
 
-		this.returned = returned;
-	}
-
-	/**
-	 * Yields the abstract syntax of the expression whose value is returned, if any.
-	 *
-	 * @return the abstract syntax of the expression whose value is returned,
-	 *         if any. Yields {@code null} if there is no such expression
-	 */
-
-	public Expression getReturned() {
-		return returned;
+		this.condition = condition;
 	}
 
 	/**
@@ -60,7 +49,7 @@ public class Assert extends Command {
 
 	@Override
 	protected void toDotAux(FileWriter where) throws java.io.IOException {
-			linkToNode("returned", returned.toDot(where), where);
+			linkToNode("condition", condition.toDot(where), where);
 	}
 
 	/**
@@ -76,25 +65,20 @@ public class Assert extends Command {
 	 * @param checker the type-checker to be used for type-checking
 	 * @return the type-checker {@code checker} itself
 	 */
-
 	@Override
 	protected TypeChecker typeCheckAux(TypeChecker checker) {
-		/*// we get from the type-checker the expected type for the return instructions
-		Type expectedReturnType = checker.getReturnType();
 
-		// a return command without expression is legal only inside a void method
-		if (returned == null && expectedReturnType != VoidType.INSTANCE)
-			error("missing return value");
-
-		// if there is a returned expression, we check that its static
-		// type can be assigned to the expected return type
-		Type returnedType;
-		if (returned != null && (returnedType = returned.typeCheck(checker)) != null &&
-				!returnedType.canBeAssignedTo(expectedReturnType))
-			error("illegal return type: " + expectedReturnType + " expected");
-
-		return checker;*/
-		return null;
+		if( ! ( checker.isAssertAllowed() ) )
+			error("Assert not allowed here");
+		if (condition == null)
+			error("Assert: expression expected");
+		else{
+			Type t = condition.typeCheck(checker);
+			
+			if( t != BooleanType.INSTANCE)
+				error("An assert must contains a boolean expression");
+		}
+		return checker;
 	}
 
 	/**
@@ -103,7 +87,6 @@ public class Assert extends Command {
 	 *
 	 * @return true, since this command doesn't contain commands. 
 	 */
-
 	@Override
 	public boolean checkForDeadcode() {
 		return true;
@@ -130,8 +113,8 @@ public class Assert extends Command {
 		continuation = new Block(new RETURN(returnType));
 
 		// if there is an initialising expression, we translate it
-		if (returned != null)
-			continuation = returned.translateAs(where, returnType, continuation);
+		if (condition != null)
+			continuation = condition.translateAs(where, returnType, continuation);
 
 		return continuation;
 	}
