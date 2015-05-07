@@ -38,10 +38,10 @@ public class FixtureDeclaration extends CodeDeclaration {
 	 *         Yields {@code null} if type-checking has not been performed yet
 	 */
 
-	@Override
-	public FixtureSignature getSignature() {
-		return (FixtureSignature) super.getSignature();
-	}
+	/*@Override
+	public ConstructorSignature getSignature() {
+		return (ConstructorSignature) super.getSignature();
+	}*/
 
 	/**
 	 * Adds arcs between the dot node for this piece of abstract syntax
@@ -64,12 +64,9 @@ public class FixtureDeclaration extends CodeDeclaration {
 
 	@Override
 	protected void addTo(ClassType clazz) {
-		FixtureSignature sig = new FixtureSignature (clazz, this);
-
-		clazz.addFixture(sig);
-
-		// we record the signature of this constructor inside this abstract syntax
-		setSignature(sig);
+		FixtureSignature fs = new FixtureSignature(clazz, this);
+		clazz.addFixture(fs);
+		setSignature(fs);
 	}
 	
 	// TODO

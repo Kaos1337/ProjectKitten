@@ -143,4 +143,6 @@ public abstract class Command extends Absyn {
 	protected void error(String msg) {
 		error(checker,msg);
 	}
+	
+	
 }

@@ -1,0 +1,45 @@
+digraph TestClass {
+size = "11,7.5";
+rotate = 90
+node15 [ label = "ClassDefinition"];
+symbol_TestClass [label = "TestClass" fontname = "Times-Italic" shape = box]
+node15 -> symbol_TestClass [label = "name" fontsize = 8]
+symbol_Object [label = "Object" fontname = "Times-Italic" shape = box]
+node15 -> symbol_Object [label = "superclassName" fontsize = 8]
+node14 [ label = "ConstructorDeclaration"];
+node0 [ label = "Skip"];
+node14 -> node0 [label = "body" fontsize = 8]
+node13 [ label = "TestDeclaration"];
+symbol_ciao [label = "ciao" fontname = "Times-Italic" shape = box]
+node13 -> symbol_ciao [label = "name" fontsize = 8]
+node5 [ label = "LocalScope"];
+node4 [ label = "Assert"];
+node3 [ label = "GreaterThan"];
+node1 [ label = "IntLiteral: 1"];
+node3 -> node1 [label = "left" fontsize = 8]
+node2 [ label = "IntLiteral: 0"];
+node3 -> node2 [label = "right" fontsize = 8]
+node4 -> node3 [label = "returned" fontsize = 8]
+node5 -> node4 [label = "body" fontsize = 8]
+node13 -> node5 [label = "body" fontsize = 8]
+node12 [ label = "MethodDeclaration"];
+node6 [ label = "VoidTypeExpression"];
+node12 -> node6 [label = "returnType" fontsize = 8]
+symbol_main [label = "main" fontname = "Times-Italic" shape = box]
+node12 -> symbol_main [label = "name" fontsize = 8]
+node9 [ label = "LocalScope"];
+node8 [ label = "MethodCallCommand"];
+node7 [ label = "StringLiteral: ciao"];
+node8 -> node7 [label = "receiver" fontsize = 8]
+symbol_output [label = "output" fontname = "Times-Italic" shape = box]
+node8 -> symbol_output [label = "name" fontsize = 8]
+node9 -> node8 [label = "body" fontsize = 8]
+node12 -> node9 [label = "body" fontsize = 8]
+node11 [ label = "FixtureDeclaration"];
+node10 [ label = "Skip"];
+node11 -> node10 [label = "body" fontsize = 8]
+node12 -> node11 [label = "next" fontsize = 8 style = bold]
+node13 -> node12 [label = "next" fontsize = 8 style = bold]
+node14 -> node13 [label = "next" fontsize = 8 style = bold]
+node15 -> node14 [label = "declarations" fontsize = 8]
+}
