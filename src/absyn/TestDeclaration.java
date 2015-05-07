@@ -78,12 +78,14 @@ public class TestDeclaration extends CodeDeclaration {
 		
 		// creo un checker che permetta gli assert
 		TypeChecker checker = new TypeChecker(VoidType.INSTANCE, clazz.getErrorMsg(), true);
-
-		// we type-check the body of the constructor in the resulting type-checker
+		
+		checker = checker.putVar("this", clazz);
+		
 		getBody().typeCheck(checker);
 
-		// we check that there is no dead-code in the body of the constructor
-		getBody().checkForDeadcode();
+		/* Secondo me non serve - Davide
+		 * if (! getBody().checkForDeadcode())
+			error(checker, "deadcode");*/
 
 	}
 }

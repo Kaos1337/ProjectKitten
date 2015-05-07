@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import semantical.TypeChecker;
 import types.ClassType;
 import types.FixtureSignature;
-import types.TypeList;
 import types.VoidType;
 
 /**
@@ -69,40 +68,27 @@ public class FixtureDeclaration extends CodeDeclaration {
 		setSignature(fs);
 	}
 	
-	// TODO
 	/**
-	 * Type-checks this constructor declaration. Namely, it builds a type-checker
+	 * Type-checks this fixture declaration. Namely, it builds a type-checker
 	 * whose only variable in scope is {@code this} of the defining class of the
-	 * constructor, and where only return instructions of type {@code void} are allowed.
-	 * It then type-checks the body of the constructor in that type-checker
+	 * fixture.
+	 * It then type-checks the body of the fixture in that type-checker
 	 * and checks that it does not contain any dead-code.
 	 *
-	 * @param clazz the semantical type of the class where this constructor occurs.
+	 * @param clazz the semantical type of the class where this fixture occurs.
 	 */
 
 	@Override
 	protected void typeCheckAux(ClassType clazz) {
-		FormalParameters formals = getFormals();
 
 		TypeChecker checker = new TypeChecker(VoidType.INSTANCE, clazz.getErrorMsg());
 		checker = checker.putVar("this", clazz);
-		// we enrich the type-checker with the formal parameters
-		if (formals != null)
-			checker = formals.typeCheck(checker);
 
-		// we type-check the body of the constructor in the resulting type-checker
 		getBody().typeCheck(checker);
 
-		// we check that there is no dead-code in the body of the constructor
-		getBody().checkForDeadcode();
-
-		// if our superclass exists, it must contain an empty constructor,
-		// that will be chained to this constructor
-		if (clazz.getSuperclass() != null && clazz.getSuperclass().constructorLookup(TypeList.EMPTY) == null)
-			error(checker, clazz.getSuperclass() + " has no empty constructor");
-
-		// constructors return nothing, so that we do not check whether
-		// a return statement is always present at the end of every
-		// syntactical execution path in the body of a constructor
+		/* Secondo me non serve - Davide
+		 * if (! getBody().checkForDeadcode())
+			error(checker, "fixture deadcode");*/
+		
 	}
 }

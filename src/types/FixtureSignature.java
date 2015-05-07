@@ -29,16 +29,14 @@ public class FixtureSignature extends CodeSignature {
 	 * @param parameters the types of the parameters of the constructor
 	 * @param abstractSyntax the abstract syntax of the declaration of this constructor
 	 */
-	private static int n = 0;
-
 	public FixtureSignature(ClassType clazz, FixtureDeclaration abstractSyntax) {
 		// a constructor always returns void and its name is by default init
-		super(clazz, VoidType.INSTANCE, null, "fixture " + n++, abstractSyntax);
+		super(clazz, VoidType.INSTANCE, TypeList.EMPTY, "fixture", abstractSyntax);
 	}
 
 	@Override
 	public String toString() {
-		return getDefiningClass() + "(" + getParameters() + ")";
+		return getDefiningClass() + "fixture";
 	}
 
 	/**

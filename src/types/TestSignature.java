@@ -21,9 +21,14 @@ public class TestSignature extends CodeSignature {
 	public TestSignature(ClassType clazz, String name, TestDeclaration abstractSyntax) {
 
 		//super(clazz,returnType,parameters,name,abstractSyntax);
-		super(clazz,VoidType.INSTANCE,null,name,abstractSyntax);
+		super(clazz,VoidType.INSTANCE,TypeList.EMPTY,name,abstractSyntax);
 	}
 
+	@Override
+	public String toString() {
+		return getDefiningClass() + "test " + getName();
+	}
+	
 	/**
 	 * Generates an {@code invokevirtual} Java bytecode that calls this
 	 * method. The Java {@code invokevirtual} bytecode calls a method by using

@@ -24,12 +24,11 @@ public class Assert extends Command {
 	private Expression condition;
 
 	/**
-	 * Constructs the abstract syntax of a {@code return} command.
+	 * Constructs the abstract syntax of a {@code assert} command.
 	 *
 	 * @param pos the position in the source file where it starts
 	 *            the concrete syntax represented by this abstract syntax
-	 * @param returned the abstract syntax of the expression whose value
-	 *                 is returned. It might be {@code null}
+	 * @param expression l'espressione booleana da valutare
 	 */
 
 	public Assert(int pos, Expression condition) {
@@ -67,16 +66,17 @@ public class Assert extends Command {
 	 */
 	@Override
 	protected TypeChecker typeCheckAux(TypeChecker checker) {
-
+		
 		if( ! ( checker.isAssertAllowed() ) )
 			error("Assert not allowed here");
+		
 		if (condition == null)
-			error("Assert: expression expected");
+			error("Assert: boolean expression expected");
 		else{
 			Type t = condition.typeCheck(checker);
 			
 			if( t != BooleanType.INSTANCE)
-				error("An assert must contains a boolean expression");
+				error("Assert must contains a boolean expression");
 		}
 		return checker;
 	}
@@ -92,7 +92,7 @@ public class Assert extends Command {
 		return true;
 	}
 
-	//TODO
+
 	/**
 	 * Translates this command into intermediate Kitten bytecode. Namely,
 	 * it returns a code which starts with the evaluation of {@link #returned},
