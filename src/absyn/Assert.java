@@ -7,7 +7,10 @@ import translation.Block;
 import types.BooleanType;
 import types.CodeSignature;
 import types.Type;
+import bytecode.Bytecode;
+import bytecode.NEWSTRING;
 import bytecode.RETURN;
+import bytecode.VIRTUALCALL;
 
 /**
  * A node of abstract syntax representing a {@code assert} command.
@@ -111,11 +114,15 @@ public class Assert extends Command {
 
 		// we get a code which is made of a block containing the bytecode return
 		continuation = new Block(new RETURN(returnType));
-
+		Bytecode falso = new NEWSTRING("test fallito @file.kit:"+where.getName());//TODO
+		Bytecode j = new VIRTUALCALL(String.,null);
 		// if there is an initialising expression, we translate it
 		if (condition != null)
-			continuation = condition.translateAs(where, returnType, continuation);
-
+			//continuation = condition.translateAs(where, returnType, continuation);
+			
+			continuation = condition.translateAsTest(where, continuation, continuation.prefixedBy(falso) );
 		return continuation;
 	}
+	
+	
 }

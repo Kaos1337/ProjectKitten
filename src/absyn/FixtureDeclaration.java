@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import semantical.TypeChecker;
 import types.ClassType;
 import types.FixtureSignature;
+import types.TypeList;
 import types.VoidType;
 
 /**

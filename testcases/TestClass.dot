@@ -14,22 +14,22 @@ symbol_ciao [label = "ciao" fontname = "Times-Italic" shape = box]
 node13 -> symbol_ciao [label = "name" fontsize = 8]
 node5 [ label = "LocalScope"];
 node4 [ label = "Assert"];
-node3 [ label = "GreaterThan"];
-node1 [ label = "IntLiteral: 1"];
+node3 [ label = "GreaterThan [boolean]"];
+node1 [ label = "IntLiteral [int]: 1"];
 node3 -> node1 [label = "left" fontsize = 8]
-node2 [ label = "IntLiteral: 0"];
+node2 [ label = "IntLiteral [int]: 0"];
 node3 -> node2 [label = "right" fontsize = 8]
-node4 -> node3 [label = "returned" fontsize = 8]
+node4 -> node3 [label = "condition" fontsize = 8]
 node5 -> node4 [label = "body" fontsize = 8]
 node13 -> node5 [label = "body" fontsize = 8]
 node12 [ label = "MethodDeclaration"];
-node6 [ label = "VoidTypeExpression"];
+node6 [ label = "VoidTypeExpression [void]"];
 node12 -> node6 [label = "returnType" fontsize = 8]
 symbol_main [label = "main" fontname = "Times-Italic" shape = box]
 node12 -> symbol_main [label = "name" fontsize = 8]
 node9 [ label = "LocalScope"];
-node8 [ label = "MethodCallCommand"];
-node7 [ label = "StringLiteral: ciao"];
+node8 [ label = "MethodCallCommand\nreferences String.output():void"];
+node7 [ label = "StringLiteral [String]: ciao"];
 node8 -> node7 [label = "receiver" fontsize = 8]
 symbol_output [label = "output" fontname = "Times-Italic" shape = box]
 node8 -> symbol_output [label = "name" fontsize = 8]

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import lexical.Lexer;
@@ -43,7 +44,8 @@ public final class ClassType extends ReferenceType {
 	private final List<ClassType> subclasses;
 
 	/**
-	 * The set of instances of this class. This is a cache for {@link #getInstances()}.
+	 * The set of instances of this class. This is a cache for
+	 * {@link #getInstances()}.
 	 */
 
 	private List<ClassType> instances;
@@ -63,7 +65,8 @@ public final class ClassType extends ReferenceType {
 	private final Set<FixtureSignature> fixtures = new HashSet<>();
 	/**
 	 * A map from method symbols to the set of signatures of the methods with
-	 * that name. Because of overloading, more than one method might have a given name.
+	 * that name. Because of overloading, more than one method might have a
+	 * given name.
 	 */
 
 	private final Map<String, Set<MethodSignature>> methods = new HashMap<>();
@@ -71,45 +74,46 @@ public final class ClassType extends ReferenceType {
 	/**
 	 * The utility for issuing errors about this class.
 	 */
-	
+
 	private ErrorMsg errorMsg;
 
 	/**
 	 * The abstract syntax of this class.
 	 */
-	
+
 	private final ClassDefinition abstractSyntax;
 
 	/**
 	 * True if and only if this class has been already type-checked.
 	 */
-	
+
 	private boolean typeChecked;
 
 	/**
-	 * Constructs a class type with the given name. If the class
-	 * cannot be found or contains a syntactical error, a fictitious class
-	 * with no fields, no constructors and no methods is created.
+	 * Constructs a class type with the given name. If the class cannot be found
+	 * or contains a syntactical error, a fictitious class with no fields, no
+	 * constructors and no methods is created.
 	 *
-	 * @param name the name of the class
+	 * @param name
+	 *            the name of the class
 	 */
-	
+
 	private ClassType(String name) {
 		// we record its name
 		this.name = name;
-	
+
 		// there are no subclasses at the moment
 		this.subclasses = new ArrayList<>();
-	
+
 		// we record this object for future lookup
 		memory.put(name, this);
-	
+
 		// we have not type-checked this class yet
 		this.typeChecked = false;
-	
+
 		ClassDefinition abstractSyntax;
 		ClassType superclass;
-	
+
 		// we perform lexical and syntactical analysis. The result is
 		// the abstract syntax of this class definition
 		try {
@@ -118,23 +122,24 @@ public final class ClassType extends ReferenceType {
 			abstractSyntax = (ClassDefinition) parser.parse().value;
 			// we add the fields, constructors and methods of this class
 			abstractSyntax.addMembersTo(this);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			// there is a syntax error in the class text or the same class
 			// cannot be found on the file system or cannot be type-checked:
-			// we build a fictitious syntax for the class, so that the processing can go on
+			// we build a fictitious syntax for the class, so that the
+			// processing can go on
 			if (name.equals("Object"))
 				abstractSyntax = new ClassDefinition(0, name, null, null);
 			else
 				abstractSyntax = new ClassDefinition(0, name, "Object", null);
 		}
-	
+
 		if (!name.equals("Object"))
 			// if this is not Object, we create its superclass also and take
 			// note that we are a direct subclass of our superclass
 			(superclass = mk(abstractSyntax.getSuperclassName())).subclasses.add(this);
 		else {
-			// otherwise we take note of the top of the hierarchy of the reference types
+			// otherwise we take note of the top of the hierarchy of the
+			// reference types
 			setObjectType(this);
 			superclass = null;
 		}
@@ -179,11 +184,12 @@ public final class ClassType extends ReferenceType {
 	}
 
 	/**
-	 * Determines whether this class type can be assigned to a given type.
-	 * The latter must be a class type, and it must be a (non-necessarily
-	 * strict) superclass of this class.
+	 * Determines whether this class type can be assigned to a given type. The
+	 * latter must be a class type, and it must be a (non-necessarily strict)
+	 * superclass of this class.
 	 *
-	 * @param other what this class should be assigned to
+	 * @param other
+	 *            what this class should be assigned to
 	 * @return true if the assignment is possible, false otherwise
 	 */
 
@@ -195,9 +201,10 @@ public final class ClassType extends ReferenceType {
 	/**
 	 * Checks if this class is a (non-necessarily strict) subclass of another.
 	 *
-	 * @param other the other class
-	 * @return true if this class is a (non-necessarily strict) subclass
-	 *         of {@code other}, false otherwise
+	 * @param other
+	 *            the other class
+	 * @return true if this class is a (non-necessarily strict) subclass of
+	 *         {@code other}, false otherwise
 	 */
 
 	public boolean subclass(ClassType other) {
@@ -206,25 +213,28 @@ public final class ClassType extends ReferenceType {
 
 	/**
 	 * Computes the least common supertype of a given type and this class type.
-	 * That is, a common supertype which is the least amongst all possible supertypes.
+	 * That is, a common supertype which is the least amongst all possible
+	 * supertypes.
 	 * <ul>
-	 * <li> If {@code other} is an array type, then {@code Object} is returned;
-	 * <li> Otherwise, if {@code other} is a class type then the least common
-	 *      superclass of this and {@code other} is returned;
-	 * <li> Otherwise, if {@code other} is a {@code NilType} or an
-	 *      {@code UnusedType}, then {@code this} is returned;
-	 * <li> Otherwise, {@code null} is returned.
+	 * <li>If {@code other} is an array type, then {@code Object} is returned;
+	 * <li>Otherwise, if {@code other} is a class type then the least common
+	 * superclass of this and {@code other} is returned;
+	 * <li>Otherwise, if {@code other} is a {@code NilType} or an
+	 * {@code UnusedType}, then {@code this} is returned;
+	 * <li>Otherwise, {@code null} is returned.
 	 * </ul>
 	 *
-	 * @param other the type whose least supertype with this class must be found
-	 * @return the least common supertype of this class and {@code other},
-	 *         if it exists, {@code null} otherwise (for instance, there
-	 *         is no least common supertype between {@code int} and any class type)
+	 * @param other
+	 *            the type whose least supertype with this class must be found
+	 * @return the least common supertype of this class and {@code other}, if it
+	 *         exists, {@code null} otherwise (for instance, there is no least
+	 *         common supertype between {@code int} and any class type)
 	 */
 
 	@Override
 	public Type leastCommonSupertype(Type other) {
-		// between a class type and an array type, the least common supertype is Object
+		// between a class type and an array type, the least common supertype is
+		// Object
 		if (other instanceof ArrayType)
 			return getObjectType();
 		else if (other instanceof ClassType) {
@@ -236,7 +246,8 @@ public final class ClassType extends ReferenceType {
 			// last chance, always valid
 			return getObjectType();
 		}
-		// the supertype of a class type and null or an unused type is the class itself
+		// the supertype of a class type and null or an unused type is the class
+		// itself
 		else if (other == NilType.INSTANCE || other == UnusedType.INSTANCE)
 			return this;
 		// otherwise, there is no common supertype
@@ -245,16 +256,17 @@ public final class ClassType extends ReferenceType {
 	}
 
 	/**
-	 * Yields the set of strict and non-strict, direct and indirect
-	 * subclasses of this class.
+	 * Yields the set of strict and non-strict, direct and indirect subclasses
+	 * of this class.
 	 *
-	 * @return the set of strict and non-strict, direct and indirect
-	 *         subclasses of this class. This list is never empty
-	 *         since this class is always an instance of itself
+	 * @return the set of strict and non-strict, direct and indirect subclasses
+	 *         of this class. This list is never empty since this class is
+	 *         always an instance of itself
 	 */
 
 	public final List<ClassType> getInstances() {
-		// we first check to see if we already computed the set of instances of this class
+		// we first check to see if we already computed the set of instances of
+		// this class
 		if (instances != null)
 			return instances;
 
@@ -263,30 +275,34 @@ public final class ClassType extends ReferenceType {
 		result.add(this);
 
 		// we add the instances of our subclasses
-		for (ClassType sub: subclasses)
+		for (ClassType sub : subclasses)
 			result.addAll(sub.getInstances());
 
-		// we take note of the set of instances, so that we do not recompute it next time
+		// we take note of the set of instances, so that we do not recompute it
+		// next time
 		return instances = result;
 	}
 
 	/**
-	 * Adds a field to this class. If a field with the given name
-	 * already existed, it is overwritten.
+	 * Adds a field to this class. If a field with the given name already
+	 * existed, it is overwritten.
 	 *
-	 * @param name the name of the field
-	 * @param sig the signature of the field
+	 * @param name
+	 *            the name of the field
+	 * @param sig
+	 *            the signature of the field
 	 */
 
 	public void addField(String name, FieldSignature sig) {
-		fields.put(name,sig);
+		fields.put(name, sig);
 	}
 
 	/**
 	 * Adds a constructor to this class. If a constructor with the given
 	 * signature already existed, it is overwritten.
 	 *
-	 * @param sig the signature of the constructor
+	 * @param sig
+	 *            the signature of the constructor
 	 */
 
 	public final void addConstructor(ConstructorSignature sig) {
@@ -294,11 +310,13 @@ public final class ClassType extends ReferenceType {
 	}
 
 	/**
-	 * Adds a method to this class. If a method with the given name
-	 * and signature already existed, it is overwritten.
+	 * Adds a method to this class. If a method with the given name and
+	 * signature already existed, it is overwritten.
 	 *
-	 * @param name the name of the method
-	 * @param sig the signature of the method
+	 * @param name
+	 *            the name of the method
+	 * @param sig
+	 *            the signature of the method
 	 */
 
 	public final void addMethod(String name, MethodSignature sig) {
@@ -310,15 +328,15 @@ public final class ClassType extends ReferenceType {
 		// we add this new method
 		set.add(sig);
 	}
-	
-	public final void addTest(String name, TestSignature test){
+
+	public final void addTest(String name, TestSignature test) {
 		this.tests.put(name, test);
 	}
 
-	public final void addFixture(FixtureSignature fixture){
+	public final void addFixture(FixtureSignature fixture) {
 		this.fixtures.add(fixture);
 	}
-	
+
 	/**
 	 * Yields the fields of this class.
 	 *
@@ -350,13 +368,14 @@ public final class ClassType extends ReferenceType {
 	}
 
 	/**
-	 * Looks up from this class for the signature of the field
-	 * with the given name, if any.
+	 * Looks up from this class for the signature of the field with the given
+	 * name, if any.
 	 *
-	 * @param name the name of the field to look up for
-	 * @return the signature of the field, as defined in this class or
-	 *         in one of its superclasses. Yields {@code null} if no
-	 *         such field has been found
+	 * @param name
+	 *            the name of the field to look up for
+	 * @return the signature of the field, as defined in this class or in one of
+	 *         its superclasses. Yields {@code null} if no such field has been
+	 *         found
 	 */
 
 	public final FieldSignature fieldLookup(String name) {
@@ -371,35 +390,38 @@ public final class ClassType extends ReferenceType {
 	}
 
 	/**
-	 * Looks up in this class for the signatures of all constructors
-	 * with parameters types compatible with those provided, if any.
-	 * It is guaranteed that in the resulting set no constructor signature
-	 * is more specific than another, that is, they are not comparable.
+	 * Looks up in this class for the signatures of all constructors with
+	 * parameters types compatible with those provided, if any. It is guaranteed
+	 * that in the resulting set no constructor signature is more specific than
+	 * another, that is, they are not comparable.
 	 *
-	 * @param formals the types the formal parameters of the constructors
-	 *                should be more general of
-	 * @return the signatures of the resulting constructors.
-	 *         Returns an empty set if no constructor has been found
+	 * @param formals
+	 *            the types the formal parameters of the constructors should be
+	 *            more general of
+	 * @return the signatures of the resulting constructors. Returns an empty
+	 *         set if no constructor has been found
 	 */
 
 	public final Set<ConstructorSignature> constructorsLookup(TypeList formals) {
 		// we return the most specific constructors amongst those available
-		// for this class and whose formal parameters are compatible with formals
+		// for this class and whose formal parameters are compatible with
+		// formals
 		return mostSpecific(constructors, formals);
 	}
 
 	/**
-	 * Looks up in this class for the signature of the constructor
-	 * with exactly the given parameters types, if any.
+	 * Looks up in this class for the signature of the constructor with exactly
+	 * the given parameters types, if any.
 	 *
-	 * @param formals the types of the formal parameters of the constructor
+	 * @param formals
+	 *            the types of the formal parameters of the constructor
 	 * @return the signature of the constructor, as defined in this class.
 	 *         Yields {@code null} if no such constructor has been found
 	 */
 
 	public ConstructorSignature constructorLookup(TypeList formals) {
 		// we check all constructors in this class signature
-		for (ConstructorSignature constructor: constructors)
+		for (ConstructorSignature constructor : constructors)
 			// we check if they have the same parameters types
 			if (constructor.getParameters().equals(formals))
 				// found!
@@ -410,21 +432,23 @@ public final class ClassType extends ReferenceType {
 	}
 
 	/**
-	 * Looks up from this class for the signature of the method
-	 * with exactly the given name and parameters types, if any.
+	 * Looks up from this class for the signature of the method with exactly the
+	 * given name and parameters types, if any.
 	 *
-	 * @param name the name of the method to look up for
-	 * @param formals the types of the formal parameters of the method
-	 * @return the signature of the method, as defined in this class or
-	 *         in one of its superclasses. Yields {@code null} if no
-	 *         such method has been found
+	 * @param name
+	 *            the name of the method to look up for
+	 * @param formals
+	 *            the types of the formal parameters of the method
+	 * @return the signature of the method, as defined in this class or in one
+	 *         of its superclasses. Yields {@code null} if no such method has
+	 *         been found
 	 */
 
 	public final MethodSignature methodLookup(String name, TypeList formals) {
 		// we check all methods in this signature having the given name
 		Set<MethodSignature> candidates = methods.get(name);
 		if (candidates != null)
-			for (MethodSignature method: candidates)
+			for (MethodSignature method : candidates)
 				// we check if they have the same parameters types
 				if (method.getParameters().equals(formals))
 					// found!
@@ -434,50 +458,60 @@ public final class ClassType extends ReferenceType {
 		return superclass == null ? null : superclass.methodLookup(name, formals);
 	}
 
-	
 	public final TestSignature testLookup(String name) {
 		return tests.get(name);
 	}
-	
+
+	public final Set<TestSignature> testLookup() {
+
+		Set<TestSignature> result = new HashSet<>();
+		for (Entry<String, TestSignature> entry : tests.entrySet()) {
+			result.add(entry.getValue());
+		}
+		return result;
+	}
+
 	public final Set<FixtureSignature> fixtureLookup() {
 		return fixtures;
 	}
-	
-	
+
 	/**
-	 * Looks up from this class for the signatures of all methods
-	 * with the given name and parameters types compatible with those
-	 * provided, if any. It is guaranteed that in the resulting set no
-	 * method signature is more specific than another, that is, they are
-	 * not comparable.
+	 * Looks up from this class for the signatures of all methods with the given
+	 * name and parameters types compatible with those provided, if any. It is
+	 * guaranteed that in the resulting set no method signature is more specific
+	 * than another, that is, they are not comparable.
 	 *
-	 * @param name the name of the method to look up for
-	 * @param formals the types the formal parameters of the methods
-	 *                should be more general of
-	 * @return the signatures of the resulting methods.
-	 *         Returns an empty set if no method has been found
+	 * @param name
+	 *            the name of the method to look up for
+	 * @param formals
+	 *            the types the formal parameters of the methods should be more
+	 *            general of
+	 * @return the signatures of the resulting methods. Returns an empty set if
+	 *         no method has been found
 	 */
 
 	public final Set<MethodSignature> methodsLookup(String name, TypeList formals) {
 		// the set of candidates is initially the set of all methods
 		// called name and defined in this class
 		Set<MethodSignature> candidates = methods.get(name);
-		if (candidates == null) candidates = new HashSet<>();
+		if (candidates == null)
+			candidates = new HashSet<>();
 
 		if (superclass != null) {
 			// if this class extends another class, we consider all possible
-			// candidate targets in the superclass, so that we allow method inheritance
-			Set<MethodSignature> superCandidates = superclass.methodsLookup(name,formals);
+			// candidate targets in the superclass, so that we allow method
+			// inheritance
+			Set<MethodSignature> superCandidates = superclass.methodsLookup(name, formals);
 
 			// we remove from the inherited candidates those which are
 			// redefined in this class, in order to model method overriding
 			Set<MethodSignature> toBeRemoved = new HashSet<>();
 
 			TypeList sigFormals, sig2Formals;
-			for (MethodSignature sig: superCandidates) {
+			for (MethodSignature sig : superCandidates) {
 				sigFormals = sig.getParameters();
 
-				for (MethodSignature sig2: candidates) {
+				for (MethodSignature sig2 : candidates) {
 					sig2Formals = sig2.getParameters();
 
 					if (sigFormals.equals(sig2Formals))
@@ -497,15 +531,17 @@ public final class ClassType extends ReferenceType {
 	}
 
 	/**
-	 * Yields the subset of a set of code signatures whose parameters
-	 * are compatible with those provided and such that no two signatures in
-	 * the subset are one more general than the other.
+	 * Yields the subset of a set of code signatures whose parameters are
+	 * compatible with those provided and such that no two signatures in the
+	 * subset are one more general than the other.
 	 *
-	 * @param sigs the original set of code signatures
-	 * @param formals the parameters which are used to select the signatures
-	 * @return the subset of {@code sigs} whose parameters
-	 *         are compatible with {@code formals} and such that no two
-	 *         signatures in this subset are one more general than the other
+	 * @param sigs
+	 *            the original set of code signatures
+	 * @param formals
+	 *            the parameters which are used to select the signatures
+	 * @return the subset of {@code sigs} whose parameters are compatible with
+	 *         {@code formals} and such that no two signatures in this subset
+	 *         are one more general than the other
 	 */
 
 	private static <T extends CodeSignature> Set<T> mostSpecific(Set<T> sigs, TypeList formals) {
@@ -513,14 +549,15 @@ public final class ClassType extends ReferenceType {
 		Set<T> toBeRemoved = new HashSet<>();
 
 		// we scan all codes of this class
-		for (T sig: sigs)
+		for (T sig : sigs)
 			// if the parameters of <tt>sig</tt> are compatible with
 			// <tt>formals</tt>, we add it to the set of candidates
-			if (formals.canBeAssignedTo(sig.getParameters())) result.add(sig);
+			if (formals.canBeAssignedTo(sig.getParameters()))
+				result.add(sig);
 
 		// we remove a candidate if it is less general than another
-		for (T sig: result)
-			for (T sig2: result)
+		for (T sig : result)
+			for (T sig2 : result)
 				if (sig != sig2 && sig.getParameters().canBeAssignedTo(sig2.getParameters()))
 					toBeRemoved.add(sig2);
 
@@ -545,9 +582,11 @@ public final class ClassType extends ReferenceType {
 		else
 			return new org.apache.bcel.generic.ObjectType(name.toString());
 	}
+
 	/**
-	 * A table which binds each symbol to its corresponding {@code KittenClassType}.
-	 * This lets us have a unique {@code KittenClassType} for a given name.
+	 * A table which binds each symbol to its corresponding
+	 * {@code KittenClassType}. This lets us have a unique
+	 * {@code KittenClassType} for a given name.
 	 */
 
 	private final static Map<String, ClassType> memory = new HashMap<>();
@@ -560,7 +599,8 @@ public final class ClassType extends ReferenceType {
 	 * <tt>KittenClassType</tt> is returned, whose code has no fields nor
 	 * constructors nor methods.
 	 *
-	 * @param name the name of the class
+	 * @param name
+	 *            the name of the class
 	 * @return the unique class type object for the class with the given name
 	 */
 
@@ -575,17 +615,18 @@ public final class ClassType extends ReferenceType {
 	}
 
 	/**
-	 * Yields a class type with the given file name. If a class type object
-	 * with this name already exists, that object is returned. Otherwise, if a
-	 * Kitten class named <tt>name</tt> exists and contains no syntax error, a
+	 * Yields a class type with the given file name. If a class type object with
+	 * this name already exists, that object is returned. Otherwise, if a Kitten
+	 * class named <tt>name</tt> exists and contains no syntax error, a
 	 * type-checked <tt>KittenClassType</tt> is returned. Otherwise, a
 	 * type-checked fictitious <tt>KittenClassType</tt> is returned, whose code
 	 * contains no fields, nor constructors nor methods.
 	 *
-	 * @param fileName the name of the file of the class, including the
-	 *                 <tt>.kit</tt> termination
-	 * @return the unique Kitten class type object for the (type-checked)
-	 *         class with the given name
+	 * @param fileName
+	 *            the name of the file of the class, including the <tt>.kit</tt>
+	 *            termination
+	 * @return the unique Kitten class type object for the (type-checked) class
+	 *         with the given name
 	 */
 
 	public static ClassType mkFromFileName(String fileName) {
@@ -640,8 +681,8 @@ public final class ClassType extends ReferenceType {
 	}
 
 	/**
-	 * Translates this class into intermediate Kitten code.
-	 * It is assumed that this class has been already type-checked.
+	 * Translates this class into intermediate Kitten code. It is assumed that
+	 * this class has been already type-checked.
 	 *
 	 * @return the program reachable from the empty constructor or the main of
 	 *         this class, translated into Kitten code
