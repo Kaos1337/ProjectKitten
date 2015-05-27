@@ -1,45 +1,79 @@
 digraph TestClass {
 size = "11,7.5";
 rotate = 90
-node15 [ label = "ClassDefinition"];
+node27 [ label = "ClassDefinition"];
 symbol_TestClass [label = "TestClass" fontname = "Times-Italic" shape = box]
-node15 -> symbol_TestClass [label = "name" fontsize = 8]
+node27 -> symbol_TestClass [label = "name" fontsize = 8]
 symbol_Object [label = "Object" fontname = "Times-Italic" shape = box]
-node15 -> symbol_Object [label = "superclassName" fontsize = 8]
-node14 [ label = "ConstructorDeclaration"];
-node0 [ label = "Skip"];
-node14 -> node0 [label = "body" fontsize = 8]
-node13 [ label = "TestDeclaration"];
+node27 -> symbol_Object [label = "superclassName" fontsize = 8]
+node26 [ label = "FieldDeclaration"];
+node0 [ label = "IntTypeExpression [int]"];
+node26 -> node0 [label = "type" fontsize = 8]
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node26 -> symbol_a [label = "name" fontsize = 8]
+node25 [ label = "ConstructorDeclaration"];
+node1 [ label = "Skip"];
+node25 -> node1 [label = "body" fontsize = 8]
+node24 [ label = "TestDeclaration"];
 symbol_ciao [label = "ciao" fontname = "Times-Italic" shape = box]
-node13 -> symbol_ciao [label = "name" fontsize = 8]
-node5 [ label = "LocalScope"];
-node4 [ label = "Assert"];
-node3 [ label = "GreaterThan [boolean]"];
-node1 [ label = "IntLiteral [int]: 1"];
-node3 -> node1 [label = "left" fontsize = 8]
-node2 [ label = "IntLiteral [int]: 0"];
-node3 -> node2 [label = "right" fontsize = 8]
-node4 -> node3 [label = "condition" fontsize = 8]
-node5 -> node4 [label = "body" fontsize = 8]
-node13 -> node5 [label = "body" fontsize = 8]
-node12 [ label = "MethodDeclaration"];
-node6 [ label = "VoidTypeExpression [void]"];
-node12 -> node6 [label = "returnType" fontsize = 8]
+node24 -> symbol_ciao [label = "name" fontsize = 8]
+node6 [ label = "LocalScope"];
+node5 [ label = "Assert"];
+node4 [ label = "GreaterThan [boolean]"];
+node2 [ label = "IntLiteral [int]: 1"];
+node4 -> node2 [label = "left" fontsize = 8]
+node3 [ label = "IntLiteral [int]: 0"];
+node4 -> node3 [label = "right" fontsize = 8]
+node5 -> node4 [label = "condition" fontsize = 8]
+node6 -> node5 [label = "body" fontsize = 8]
+node24 -> node6 [label = "body" fontsize = 8]
+node23 [ label = "MethodDeclaration"];
+node7 [ label = "VoidTypeExpression [void]"];
+node23 -> node7 [label = "returnType" fontsize = 8]
 symbol_main [label = "main" fontname = "Times-Italic" shape = box]
-node12 -> symbol_main [label = "name" fontsize = 8]
-node9 [ label = "LocalScope"];
-node8 [ label = "MethodCallCommand\nreferences String.output():void"];
-node7 [ label = "StringLiteral [String]: ciao"];
-node8 -> node7 [label = "receiver" fontsize = 8]
+node23 -> symbol_main [label = "name" fontsize = 8]
+node10 [ label = "LocalScope"];
+node9 [ label = "MethodCallCommand\nreferences String.output():void"];
+node8 [ label = "StringLiteral [String]: ciao"];
+node9 -> node8 [label = "receiver" fontsize = 8]
 symbol_output [label = "output" fontname = "Times-Italic" shape = box]
-node8 -> symbol_output [label = "name" fontsize = 8]
-node9 -> node8 [label = "body" fontsize = 8]
-node12 -> node9 [label = "body" fontsize = 8]
-node11 [ label = "FixtureDeclaration"];
-node10 [ label = "Skip"];
-node11 -> node10 [label = "body" fontsize = 8]
-node12 -> node11 [label = "next" fontsize = 8 style = bold]
-node13 -> node12 [label = "next" fontsize = 8 style = bold]
-node14 -> node13 [label = "next" fontsize = 8 style = bold]
-node15 -> node14 [label = "declarations" fontsize = 8]
+node9 -> symbol_output [label = "name" fontsize = 8]
+node10 -> node9 [label = "body" fontsize = 8]
+node23 -> node10 [label = "body" fontsize = 8]
+node22 [ label = "FixtureDeclaration"];
+node15 [ label = "LocalScope"];
+node14 [ label = "Assignment"];
+node12 [ label = "FieldAccess [int]\nreferences TestClass.a:int"];
+node11 [ label = "Variable [TestClass]"];
+symbol_this [label = "this" fontname = "Times-Italic" shape = box]
+node11 -> symbol_this [label = "name" fontsize = 8]
+node12 -> node11 [label = "receiver" fontsize = 8]
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node12 -> symbol_a [label = "name" fontsize = 8]
+node14 -> node12 [label = "lvalue" fontsize = 8]
+node13 [ label = "IntLiteral [int]: 10"];
+node14 -> node13 [label = "rvalue" fontsize = 8]
+node15 -> node14 [label = "body" fontsize = 8]
+node22 -> node15 [label = "body" fontsize = 8]
+node21 [ label = "FixtureDeclaration"];
+node20 [ label = "LocalScope"];
+node19 [ label = "Assignment"];
+node17 [ label = "FieldAccess [int]\nreferences TestClass.a:int"];
+node16 [ label = "Variable [TestClass]"];
+symbol_this [label = "this" fontname = "Times-Italic" shape = box]
+node16 -> symbol_this [label = "name" fontsize = 8]
+node17 -> node16 [label = "receiver" fontsize = 8]
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node17 -> symbol_a [label = "name" fontsize = 8]
+node19 -> node17 [label = "lvalue" fontsize = 8]
+node18 [ label = "IntLiteral [int]: 5"];
+node19 -> node18 [label = "rvalue" fontsize = 8]
+node20 -> node19 [label = "body" fontsize = 8]
+node21 -> node20 [label = "body" fontsize = 8]
+node22 -> node21 [label = "next" fontsize = 8 style = bold]
+node23 -> node22 [label = "next" fontsize = 8 style = bold]
+node24 -> node23 [label = "next" fontsize = 8 style = bold]
+node25 -> node24 [label = "next" fontsize = 8 style = bold]
+node26 -> node25 [label = "next" fontsize = 8 style = bold]
+node27 -> node26 [label = "declarations" fontsize = 8]
 }

@@ -1,16 +1,22 @@
 class TestClass{
-assert (1>0)
+
+  field int a
+	
   constructor() {}
   
   test ciao {
-    assert (1>0)
+    assert (1<0)
   }
   
   method void main(){
-    "ciao".output();
+    "ciao".output()
   }
   
   fixture {
+   this.a := 10
+  }
   
+  fixture {
+   this.a := 5
   }
 }

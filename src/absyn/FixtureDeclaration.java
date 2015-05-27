@@ -64,7 +64,7 @@ public class FixtureDeclaration extends CodeDeclaration {
 
 	@Override
 	protected void addTo(ClassType clazz) {
-		FixtureSignature fs = new FixtureSignature(clazz, this);
+		FixtureSignature fs = new FixtureSignature(clazz, this, super.getPos());
 		clazz.addFixture(fs);
 		setSignature(fs);
 	}

@@ -168,11 +168,11 @@ public abstract class CodeDeclaration extends ClassMemberDeclaration {
 				process(((GETFIELD) h).getField().getDefiningClass(), done);
 			} else if (h instanceof PUTFIELD) {
 				done.add(((PUTFIELD) h).getField());
-				process(((GETFIELD) h).getField().getDefiningClass(), done);
+				process(((PUTFIELD) h).getField().getDefiningClass(), done);
 			} else if (h instanceof CALL)
 				for (CodeSignature callee : ((CALL) h).getDynamicTargets()) {
 					callee.getAbstractSyntax().translate(done);
-					process(((GETFIELD) h).getField().getDefiningClass(), done);
+					process(callee.getDefiningClass(), done);
 				}
 		}
 

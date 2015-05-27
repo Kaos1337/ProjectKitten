@@ -21,22 +21,30 @@ import bytecode.LOAD;
 
 public class FixtureSignature extends CodeSignature {
 
+	private final int pos;
+
 	/**
-	 * Constructs a signature for a constructor, given its parameters types
-	 * and the class it belongs to.
+	 * Constructs a signature for a constructor, given its parameters types and
+	 * the class it belongs to.
 	 *
-	 * @param clazz the class this constructor belongs to
-	 * @param parameters the types of the parameters of the constructor
-	 * @param abstractSyntax the abstract syntax of the declaration of this constructor
+	 * @param clazz
+	 *            the class this constructor belongs to
+	 * @param parameters
+	 *            the types of the parameters of the constructor
+	 * @param abstractSyntax
+	 *            the abstract syntax of the declaration of this constructor
+	 * @param pos the position in the code
 	 */
-	public FixtureSignature(ClassType clazz, FixtureDeclaration abstractSyntax) {
+	public FixtureSignature(ClassType clazz, FixtureDeclaration abstractSyntax, int pos) {
 		// a constructor always returns void and its name is by default init
 		super(clazz, VoidType.INSTANCE, TypeList.EMPTY, "fixture", abstractSyntax);
+		this.pos = pos;
 	}
+
 
 	@Override
 	public String toString() {
-		return getDefiningClass() + "fixture";
+		return getDefiningClass() + "fixture" + pos;
 	}
 
 	/**
@@ -45,9 +53,11 @@ public class FixtureSignature extends CodeSignature {
 	 * using a hard-wired class name to look up for the method's implementation
 	 * and has a receiver.
 	 *
-	 * @param classGen the class generator to be used to generate
-	 *                 the {@code invokespecial} Java bytecode
-	 * @return an {@code invokespecial} Java bytecode that calls this constructor
+	 * @param classGen
+	 *            the class generator to be used to generate the
+	 *            {@code invokespecial} Java bytecode
+	 * @return an {@code invokespecial} Java bytecode that calls this
+	 *         constructor
 	 */
 
 	public INVOKESPECIAL createINVOKESPECIAL(JavaClassGenerator classGen) {
@@ -55,11 +65,13 @@ public class FixtureSignature extends CodeSignature {
 	}
 
 	/**
-	 * Adds a prefix to the Kitten bytecode generated for this constructor.
-	 * That is a call to the empty constructor of the superclass (if any)
+	 * Adds a prefix to the Kitten bytecode generated for this constructor. That
+	 * is a call to the empty constructor of the superclass (if any)
 	 *
-	 * @param code the code already compiled for this constructor
-	 * @return {@code code} prefixed with a call to the empty constructor of the superclass
+	 * @param code
+	 *            the code already compiled for this constructor
+	 * @return {@code code} prefixed with a call to the empty constructor of the
+	 *         superclass
 	 */
 
 	@Override
@@ -69,9 +81,8 @@ public class FixtureSignature extends CodeSignature {
 		if (!getDefiningClass().getName().equals("Object")) {
 			ClassType superclass = getDefiningClass().getSuperclass();
 
-			code = new LOAD(0, getDefiningClass()).followedBy
-				(new CONSTRUCTORCALL(superclass.constructorLookup(TypeList.EMPTY))
-				.followedBy(code));
+			code = new LOAD(0, getDefiningClass()).followedBy(new CONSTRUCTORCALL(superclass
+					.constructorLookup(TypeList.EMPTY)).followedBy(code));
 		}
 
 		return code;
