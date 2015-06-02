@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionFactory;
 import org.apache.bcel.generic.InstructionHandle;
@@ -84,7 +84,7 @@ public class NEG extends NonCallingSequentialBytecode {
 	 */
 
 	@Override
-	public InstructionList generateJavaBytecode(JavaClassGenerator classGen) {
+	public InstructionList generateJavaBytecode(GeneralClassGenerator classGen) {
 		InstructionList il = new InstructionList();
 
 		if (type == BooleanType.INSTANCE) {

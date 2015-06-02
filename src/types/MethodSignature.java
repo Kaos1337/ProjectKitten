@@ -1,5 +1,6 @@
 package types;
 
+import javaBytecodeGenerator.GeneralClassGenerator;
 import javaBytecodeGenerator.JavaClassGenerator;
 
 import org.apache.bcel.Constants;
@@ -44,7 +45,7 @@ public class MethodSignature extends CodeSignature {
 	 * @return an {@code invokevirtual} Java bytecode that calls this method
 	 */
 
-	public INVOKEVIRTUAL createINVOKEVIRTUAL(JavaClassGenerator classGen) {
+	public INVOKEVIRTUAL createINVOKEVIRTUAL(GeneralClassGenerator classGen) {
 		return (INVOKEVIRTUAL) createInvokeInstruction(classGen,Constants.INVOKEVIRTUAL);
 	}
 

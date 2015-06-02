@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionFactory;
 import org.apache.bcel.generic.InstructionHandle;
@@ -75,7 +75,7 @@ public class LE extends ComparisonNumericalBinOpBytecode {
 	 */
 
 	@Override
-	public InstructionList generateJavaBytecode(JavaClassGenerator classGen) {
+	public InstructionList generateJavaBytecode(GeneralClassGenerator classGen) {
 		InstructionList il = new InstructionList(InstructionFactory.NOP);
 
 		InstructionHandle follow = il.getStart();

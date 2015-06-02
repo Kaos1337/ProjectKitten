@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionFactory;
 import org.apache.bcel.generic.InstructionList;
@@ -28,7 +28,7 @@ public class NOP extends NonCallingSequentialBytecode {
 	 * @return the Java {@code nop} bytecode
 	 */
 
-	public InstructionList generateJavaBytecode(JavaClassGenerator classGen) {
+	public InstructionList generateJavaBytecode(GeneralClassGenerator classGen) {
 		return new InstructionList(InstructionFactory.NOP);
 	}
 }

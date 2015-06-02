@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
@@ -43,7 +43,7 @@ public abstract class BranchingBytecode extends Bytecode implements NonCallingBy
 	 *         goes to {@code yes} or {@code no} depending on the outcome of that check
 	 */
 
-	public final InstructionList generateJavaBytecode(JavaClassGenerator classGen, InstructionHandle yes, InstructionHandle no) {
+	public final InstructionList generateJavaBytecode(GeneralClassGenerator classGen, InstructionHandle yes, InstructionHandle no) {
 		InstructionList il = new InstructionList();
 
 		// builds the instructions which go to yes if the test is true
@@ -53,6 +53,7 @@ public abstract class BranchingBytecode extends Bytecode implements NonCallingBy
 
 		return il;
 	}
+	
 
 	/**
 	 * Auxiliary method that adds to the given list of instructions the code that goes
@@ -64,5 +65,5 @@ public abstract class BranchingBytecode extends Bytecode implements NonCallingBy
 	 *            expressed by this branching bytecode is true
 	 */
 
-	protected abstract void generateJavaBytecodeAux(InstructionList il, JavaClassGenerator classGen, InstructionHandle yes);
+	protected abstract void generateJavaBytecodeAux(InstructionList il, GeneralClassGenerator classGen, InstructionHandle yes);
 }

@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionList;
 
@@ -30,5 +30,5 @@ public abstract class NonBranchingBytecode extends Bytecode {
 	 * @return the Java bytecode(s) corresponding to this Kitten bytecode
 	 */
 
-	public abstract InstructionList generateJavaBytecode(JavaClassGenerator classGen);
+	public abstract InstructionList generateJavaBytecode(GeneralClassGenerator classGen);
 }

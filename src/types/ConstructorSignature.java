@@ -1,6 +1,6 @@
 package types;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.INVOKESPECIAL;
@@ -51,7 +51,7 @@ public class ConstructorSignature extends CodeSignature {
 	 * @return an {@code invokespecial} Java bytecode that calls this constructor
 	 */
 
-	public INVOKESPECIAL createINVOKESPECIAL(JavaClassGenerator classGen) {
+	public INVOKESPECIAL createINVOKESPECIAL(GeneralClassGenerator classGen) {
 		return (INVOKESPECIAL) createInvokeInstruction(classGen, Constants.INVOKESPECIAL);
 	}
 
@@ -62,7 +62,7 @@ public class ConstructorSignature extends CodeSignature {
 	 * @param classGen the generator of the class where the constructor lives
 	 */
 
-	public void createConstructor(JavaClassGenerator classGen) {
+	public void createConstructor(GeneralClassGenerator classGen) {
 		InstructionList il = classGen.generateJavaBytecode(getCode());
 
 		// we add the following code at the beginning of the empty constructor

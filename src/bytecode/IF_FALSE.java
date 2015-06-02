@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
@@ -63,7 +63,7 @@ public class IF_FALSE extends BranchingConstantComparisonBytecode {
 	 */
 
 	@Override
-	protected void generateJavaBytecodeAux(InstructionList il, JavaClassGenerator classGen, InstructionHandle yes) {
+	protected void generateJavaBytecodeAux(InstructionList il, GeneralClassGenerator classGen, InstructionHandle yes) {
 		il.append(new org.apache.bcel.generic.IFEQ(yes));
 	}
 }

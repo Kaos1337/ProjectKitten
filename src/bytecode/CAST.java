@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.F2I;
 import org.apache.bcel.generic.I2F;
@@ -100,7 +100,7 @@ public class CAST extends NonCallingSequentialBytecode {
 	 */
 
 	@Override
-	public InstructionList generateJavaBytecode(JavaClassGenerator classGen) {
+	public InstructionList generateJavaBytecode(GeneralClassGenerator classGen) {
 		if (intoType instanceof ReferenceType)
 			// we use the instruction factory to simplify the addition of the type to the constant pool
 			return new InstructionList

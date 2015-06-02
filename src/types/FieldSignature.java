@@ -1,5 +1,6 @@
 package types;
 
+import javaBytecodeGenerator.GeneralClassGenerator;
 import javaBytecodeGenerator.JavaClassGenerator;
 
 import org.apache.bcel.Constants;
@@ -94,7 +95,7 @@ public class FieldSignature extends ClassMemberSignature {
      * @return a {@code getfield} Java bytecode that reads the value of this field
      */
 
-    public FieldInstruction createGETFIELD(JavaClassGenerator classGen) {
+    public FieldInstruction createGETFIELD(GeneralClassGenerator classGen) {
     	return classGen.getFactory().createGetField
     		(getDefiningClass().toBCEL().toString(), name.toString(), type.toBCEL());
     }
@@ -108,7 +109,7 @@ public class FieldSignature extends ClassMemberSignature {
      * @return a {@code putfield} Java bytecode that writes a value inside this field
      */
 
-    public FieldInstruction createPUTFIELD(JavaClassGenerator classGen) {
+    public FieldInstruction createPUTFIELD(GeneralClassGenerator classGen) {
     	return classGen.getFactory().createPutField
    			(getDefiningClass().toBCEL().toString(), name.toString(), type.toBCEL());
     }

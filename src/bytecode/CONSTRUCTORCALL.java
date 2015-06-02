@@ -1,7 +1,7 @@
 package bytecode;
 
 import java.util.Collections;
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionList;
 
@@ -40,7 +40,7 @@ public class CONSTRUCTORCALL extends CALL {
 	 */
 
 	@Override
-	public InstructionList generateJavaBytecode(JavaClassGenerator classGen) {
+	public InstructionList generateJavaBytecode(GeneralClassGenerator classGen) {
 		return new InstructionList(((ConstructorSignature) getStaticTarget()).createINVOKESPECIAL(classGen));
 	}
 }

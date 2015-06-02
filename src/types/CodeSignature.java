@@ -1,6 +1,6 @@
 package types;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InvokeInstruction;
 
@@ -185,7 +185,7 @@ public abstract class CodeSignature extends ClassMemberSignature {
      * @return an invocation instruction that calls this method or constructor
      */
 
-    protected InvokeInstruction createInvokeInstruction(JavaClassGenerator classGen, short invocationType) {
+    protected InvokeInstruction createInvokeInstruction(GeneralClassGenerator classGen, short invocationType) {
     	// we use the instruction factory in order to put automatically inside
     	// the constant pool a reference to the Java signature of this method or constructor
     	return classGen.getFactory().createInvoke

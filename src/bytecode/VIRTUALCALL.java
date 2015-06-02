@@ -3,7 +3,7 @@ package bytecode;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionList;
 
@@ -77,7 +77,7 @@ public class VIRTUALCALL extends CALL {
 	 */
 
 	@Override
-	public InstructionList generateJavaBytecode(JavaClassGenerator classGen) {
+	public InstructionList generateJavaBytecode(GeneralClassGenerator classGen) {
 		return new InstructionList(((MethodSignature) getStaticTarget()).createINVOKEVIRTUAL(classGen));
 	}
 }

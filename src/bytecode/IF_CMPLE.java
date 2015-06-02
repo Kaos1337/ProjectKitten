@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
@@ -69,7 +69,7 @@ public class IF_CMPLE extends BranchingNumericalComparisonBytecode {
 	 */
 
 	@Override
-	protected void generateJavaBytecodeAux(InstructionList il, JavaClassGenerator classGen, InstructionHandle yes) {
+	protected void generateJavaBytecodeAux(InstructionList il, GeneralClassGenerator classGen, InstructionHandle yes) {
 		getType().JB_if_cmple(il,yes);
 	}
 }

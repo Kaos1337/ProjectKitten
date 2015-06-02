@@ -1,12 +1,16 @@
 package types;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
+import javaBytecodeGenerator.TestClassGenerator;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.INVOKESPECIAL;/*
 import org.apache.bcel.generic.InstructionFactory;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;*/
+
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.Type;
 
 import translation.Block;
 import absyn.FixtureDeclaration;
@@ -60,7 +64,7 @@ public class FixtureSignature extends CodeSignature {
 	 *         constructor
 	 */
 
-	public INVOKESPECIAL createINVOKESPECIAL(JavaClassGenerator classGen) {
+	public INVOKESPECIAL createINVOKESPECIAL(GeneralClassGenerator classGen) {
 		return (INVOKESPECIAL) createInvokeInstruction(classGen, Constants.INVOKESPECIAL);
 	}
 
@@ -86,5 +90,32 @@ public class FixtureSignature extends CodeSignature {
 		}
 
 		return code;
+	}
+
+
+	public void createFixture(TestClassGenerator classGen) {
+		MethodGen fixtureGen;
+		// http://www.tutorialspoint.com/java/java_basic_operators.htm
+		fixtureGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private and static
+				org.apache.bcel.generic.Type.VOID, // return type
+				new Type[] { org.apache.bcel.generic.Type.CLASS }, // TODO
+				// getParameters().toBCEL(), // parameters types, if any
+				null, // parameters names: yo man, we do not give a fuck too.
+						// Peace.
+				this.getDefiningClass().toString() + toString(), // method's name ma allora è sbagliato anche nei test?
+				classGen.getClassName(), // defining class
+				classGen.generateJavaBytecode(getCode()), // bytecode of the
+															// method
+				classGen.getConstantPool()); // constant pool
+
+		// we must always call these methods before the getMethod()
+		// method below. They set the number of local variables and stack
+		// elements used by the code of the method
+		fixtureGen.setMaxStack();
+		fixtureGen.setMaxLocals();
+
+		// we add a method to the class that we are generating
+		classGen.addMethod(fixtureGen.getMethod());
+		
 	}
 }

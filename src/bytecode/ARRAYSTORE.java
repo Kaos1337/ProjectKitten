@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionFactory;
 import org.apache.bcel.generic.InstructionList;
@@ -61,7 +61,7 @@ public class ARRAYSTORE extends NonCallingSequentialBytecode {
 	 */
 
 	@Override
-	public InstructionList generateJavaBytecode(JavaClassGenerator classGen) {
+	public InstructionList generateJavaBytecode(GeneralClassGenerator classGen) {
 		// we use the instruction factory to simplify the choice among the possible Java bytecodes
 		return new InstructionList(InstructionFactory.createArrayStore(type.toBCEL()));
 	}

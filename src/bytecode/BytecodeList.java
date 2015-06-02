@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionList;
 
@@ -114,7 +114,7 @@ public class BytecodeList {
      * @return the Java bytecode corresponding to this list of bytecodes
      */
 
-    public InstructionList generateJavaBytecode(JavaClassGenerator classGen) {
+    public InstructionList generateJavaBytecode(GeneralClassGenerator classGen) {
     	InstructionList result;
 
     	if (head instanceof NonBranchingBytecode)
@@ -134,4 +134,5 @@ public class BytecodeList {
 
     	return result;
     }
+    
 }

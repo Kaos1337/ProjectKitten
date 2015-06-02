@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.InstructionFactory;
@@ -58,7 +58,7 @@ public class NEWSTRING extends NonCallingSequentialBytecode {
 	 */
 
 	@Override
-	public InstructionList generateJavaBytecode(JavaClassGenerator classGen) {
+	public InstructionList generateJavaBytecode(GeneralClassGenerator classGen) {
 		InstructionFactory factory = classGen.getFactory();
 		InstructionList il = new InstructionList();
 		String kittenStringName = runTime.String.class.getName();

@@ -1,6 +1,6 @@
 package bytecode;
 
-import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.GeneralClassGenerator;
 
 import org.apache.bcel.generic.InstructionList;
 
@@ -84,7 +84,7 @@ public class NEWARRAY extends NonCallingSequentialBytecode {
 	 */
 
 	@Override
-	public InstructionList generateJavaBytecode(JavaClassGenerator classGen) {
+	public InstructionList generateJavaBytecode(GeneralClassGenerator classGen) {
 		// we use the instruction factory to simplify the choice between
 		// the newarray and anewarray Java bytecode. Moreover, it automatically
 		// puts the type of the elements of the array inside the constant pool
