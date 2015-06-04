@@ -1,16 +1,26 @@
 package javaBytecodeGenerator;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 
+import bytecode.ARRAYLOAD;
+import bytecode.Bytecode;
+import bytecode.NEW;
+import bytecode.RETURN;
+import bytecode.VIRTUALCALL;
 import translation.Block;
 import types.ClassMemberSignature;
 import types.ClassType;
+import types.ConstructorSignature;
 import types.FixtureSignature;
+import types.MethodSignature;
 import types.TestSignature;
+import types.VoidType;
 
 /**
  * A Java bytecode generator. It transforms the Kitten intermediate language
@@ -26,8 +36,11 @@ public class TestClassGenerator extends GeneralClassGenerator{
 	/**
 	 * The class being tested
 	 */
-	ClassType clazztest ;
+	private ClassType clazztest;
 	
+	private ArrayList<MethodSignature> fixt = new ArrayList<MethodSignature>();
+	private ArrayList<MethodSignature> test = new ArrayList<MethodSignature>();
+
 	/**
 	 * Builds a class generator for the given class type.
 	 *
@@ -52,7 +65,7 @@ public class TestClassGenerator extends GeneralClassGenerator{
 		// we add the fixtures
 		for (FixtureSignature t : clazz.fixtureLookup())
 			if (sigs == null || sigs.contains(t))
-				t.createFixture(this);
+				t.createFixture(this, fixt);
 		
 		createMain();
 	}
@@ -81,9 +94,18 @@ public class TestClassGenerator extends GeneralClassGenerator{
 	}
 	
 	private Block getMainCode(){
-		Block body;
-		//body = this.
-		return null;
+		Block body = new Block(new RETURN(VoidType.INSTANCE));
+		ArrayList<Bytecode> code = new ArrayList<Bytecode>();
+		code.add(new NEW(clazztest));
+		
+		this.getJavaClass()
+		
+		for(MethodSignature m : )
+			code.add(new VIRTUALCALL((ClassType) this.getJavaClass(), (MethodSignature) "aa"));
+		
+		return body;
+		
+		
 	}
 
 }

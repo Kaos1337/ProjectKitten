@@ -1,5 +1,7 @@
 package types;
 
+import java.util.ArrayList;
+
 import javaBytecodeGenerator.GeneralClassGenerator;
 import javaBytecodeGenerator.TestClassGenerator;
 
@@ -93,7 +95,7 @@ public class FixtureSignature extends CodeSignature {
 	}
 
 
-	public void createFixture(TestClassGenerator classGen) {
+	public void createFixture(TestClassGenerator classGen, ArrayList<MethodSignature> fixt) {
 		MethodGen fixtureGen;
 		// http://www.tutorialspoint.com/java/java_basic_operators.htm
 		fixtureGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private and static
@@ -102,7 +104,7 @@ public class FixtureSignature extends CodeSignature {
 				// getParameters().toBCEL(), // parameters types, if any
 				null, // parameters names: yo man, we do not give a fuck too.
 						// Peace.
-				getName().toString() + pos, // method's name ma allora è sbagliato anche nei test?
+				getName().toString() + pos, // method's name
 				classGen.getClassName(), // defining class
 				classGen.generateJavaBytecode(getCode()), // bytecode of the
 															// method
@@ -113,9 +115,11 @@ public class FixtureSignature extends CodeSignature {
 		// elements used by the code of the method
 		fixtureGen.setMaxStack();
 		fixtureGen.setMaxLocals();
-
+		
+		fixt.add(fixtureGen);
 		// we add a method to the class that we are generating
 		classGen.addMethod(fixtureGen.getMethod());
+		
 		
 	}
 }

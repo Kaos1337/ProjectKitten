@@ -48,6 +48,7 @@ public class JavaClassGenerator extends GeneralClassGenerator {
 			for (MethodSignature method: s)
 				if (sigs == null || sigs.contains(method))
 					method.createMethod(this);
+	
 	}
 
 	}
