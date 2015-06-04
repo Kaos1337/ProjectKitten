@@ -6,8 +6,6 @@ import javaBytecodeGenerator.TestClassGenerator;
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.Type;
-
 import absyn.TestDeclaration;
 import translation.Block;
 
@@ -54,11 +52,11 @@ public class TestSignature extends CodeSignature {
 		// http://www.tutorialspoint.com/java/java_basic_operators.htm
 		testGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private and static
 				org.apache.bcel.generic.Type.VOID, // return type
-				new Type[] { org.apache.bcel.generic.Type.CLASS }, // TODO
+				new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.CLASS }, // TODO
 				// getParameters().toBCEL(), // parameters types, if any
 				null, // parameters names: yo man, we do not give a fuck too.
 						// Peace.
-				this.getDefiningClass().toString() + getName().toString(), // method's name
+				getName().toString(), // method's name
 				classGen.getClassName(), // defining class
 				classGen.generateJavaBytecode(getCode()), // bytecode of the
 															// method

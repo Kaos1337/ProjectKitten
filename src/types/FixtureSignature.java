@@ -102,7 +102,7 @@ public class FixtureSignature extends CodeSignature {
 				// getParameters().toBCEL(), // parameters types, if any
 				null, // parameters names: yo man, we do not give a fuck too.
 						// Peace.
-				this.getDefiningClass().toString() + toString(), // method's name ma allora è sbagliato anche nei test?
+				getName().toString() + pos, // method's name ma allora è sbagliato anche nei test?
 				classGen.getClassName(), // defining class
 				classGen.generateJavaBytecode(getCode()), // bytecode of the
 															// method
