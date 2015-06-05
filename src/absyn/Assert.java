@@ -123,11 +123,12 @@ public class Assert extends Command {
 		// we get a code which is made of a block containing the bytecode return
 		continuation = new Block(new RETURN(returnType));
 		Bytecode falso = new NEWSTRING("test fallito @" + this.dotNodeName() + ".kit: " + where.getName());// TODO
-		Bytecode falso2 = new VIRTUALCALL((ClassType) condition.getStaticType(), (MethodSignature) where);
+		//Bytecode falso2 = new VIRTUALCALL((ClassType) condition.getStaticType(), (MethodSignature) where);
+		Bytecode falso2 = new VIRTUALCALL(,);
+		
 		// if there is an initialising expression, we translate it
 		if (condition != null)
-			// continuation = condition.translateAs(where, returnType,
-			// continuation);
+			// continuation = condition.translateAs(where, returnType, continuation);
 
 			continuation = condition.translateAsTest(where, continuation,
 					continuation.prefixedBy(falso2).prefixedBy(falso));

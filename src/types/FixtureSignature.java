@@ -43,7 +43,7 @@ public class FixtureSignature extends CodeSignature {
 	 */
 	public FixtureSignature(ClassType clazz, FixtureDeclaration abstractSyntax, int pos) {
 		// a constructor always returns void and its name is by default init
-		super(clazz, VoidType.INSTANCE, TypeList.EMPTY, "fixture", abstractSyntax);
+		super(clazz, VoidType.INSTANCE, TypeList.EMPTY, "fixture" + pos, abstractSyntax);
 		this.pos = pos;
 	}
 
@@ -95,7 +95,7 @@ public class FixtureSignature extends CodeSignature {
 	}
 
 
-	public void createFixture(TestClassGenerator classGen, ArrayList<MethodSignature> fixt) {
+	public void createFixture(TestClassGenerator classGen) {
 		MethodGen fixtureGen;
 		// http://www.tutorialspoint.com/java/java_basic_operators.htm
 		fixtureGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private and static
@@ -104,7 +104,7 @@ public class FixtureSignature extends CodeSignature {
 				// getParameters().toBCEL(), // parameters types, if any
 				null, // parameters names: yo man, we do not give a fuck too.
 						// Peace.
-				getName().toString() + pos, // method's name
+				getName() + pos, // method's name
 				classGen.getClassName(), // defining class
 				classGen.generateJavaBytecode(getCode()), // bytecode of the
 															// method
@@ -116,7 +116,6 @@ public class FixtureSignature extends CodeSignature {
 		fixtureGen.setMaxStack();
 		fixtureGen.setMaxLocals();
 		
-		fixt.add(fixtureGen);
 		// we add a method to the class that we are generating
 		classGen.addMethod(fixtureGen.getMethod());
 		
