@@ -33,7 +33,7 @@ public class Main {
 			System.out.println("Translation into Kitten bytecode completed \t[" + (System.currentTimeMillis() - time) + "ms]");
 
 			time = System.currentTimeMillis();
-			//program.dumpCodeDot();
+			program.dumpCodeDot();
 
 			System.out.println("Kitten bytecode dumping in dot format completed\t[" + (System.currentTimeMillis() - time) + "ms]");
 
