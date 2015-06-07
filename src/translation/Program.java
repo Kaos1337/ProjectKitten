@@ -2,10 +2,12 @@ package translation;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import javaBytecodeGenerator.JavaClassGenerator;
 
+import javaBytecodeGenerator.JavaClassGenerator;
+import javaBytecodeGenerator.TestClassGenerator;
 import types.ClassMemberSignature;
 import types.CodeSignature;
 import types.ClassType;
@@ -87,6 +89,12 @@ public class Program {
 	public void cleanUp() {
 		sigs.clear();
 		start.getCode().cleanUp(this);
+		/*for(ClassMemberSignature s : sigs){
+			if(!sigs.containsAll(s.getDefiningClass().fixtureLookup()))
+				sigs.addAll(s.getDefiningClass().fixtureLookup());
+			if(!sigs.containsAll(s.getDefiningClass().testLookup()))
+				sigs.addAll(s.getDefiningClass().testLookup());
+		}*/
 	}
 
 	/**
@@ -180,6 +188,18 @@ public class Program {
 			catch (IOException e) {
 				System.out.println("Could not dump the Java bytecode for class " + clazz);
 			}
+	}
+	
+	public void generateJavaBytecodeForTests(ArrayList<String> testslist) {
+		for (ClassType clazz: ClassType.getAll())
+			if(!clazz.testLookup().isEmpty())
+				try {
+					new TestClassGenerator(clazz, sigs).getJavaClass().dump(clazz + "Test.class");
+					testslist.add(clazz+"Test");
+				}
+				catch (IOException e) {
+					System.out.println("Could not dump the Java bytecode for class " + clazz + "Test.class");
+				}
 	}
 
 	/**

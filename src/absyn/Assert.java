@@ -4,11 +4,13 @@ import java.io.FileWriter;
 
 import semantical.TypeChecker;
 import translation.Block;
+import translation.Program;
 import types.BooleanType;
 import types.ClassType;
 import types.CodeSignature;
 import types.MethodSignature;
 import types.Type;
+import types.TypeList;
 import bytecode.Bytecode;
 import bytecode.NEWSTRING;
 import bytecode.RETURN;
@@ -122,9 +124,18 @@ public class Assert extends Command {
 
 		// we get a code which is made of a block containing the bytecode return
 		continuation = new Block(new RETURN(returnType));
+		
 		Bytecode falso = new NEWSTRING("test fallito @" + this.dotNodeName() + ".kit: " + where.getName());// TODO
 		//Bytecode falso2 = new VIRTUALCALL((ClassType) condition.getStaticType(), (MethodSignature) where);
-		Bytecode falso2 = new VIRTUALCALL(,);
+		
+		//Traduzione String.kit per usare output in VIRTUALCALL
+		ClassType clazz = ClassType.mkFromFileName("String.kit");
+		Program program = clazz.translate();
+		
+		Bytecode falso2 = new VIRTUALCALL(clazz , clazz.methodLookup("output", TypeList.EMPTY));
+		
+		program.dumpCodeDot();
+		System.out.println("---------------------Assert sbagliato");
 		
 		// if there is an initialising expression, we translate it
 		if (condition != null)
@@ -134,5 +145,28 @@ public class Assert extends Command {
 					continuation.prefixedBy(falso2).prefixedBy(falso));
 		return continuation;
 	}
+	
+	/*
+	 * @param pos the position where the error must be reported
+	 *            (number of characters from the beginning of the file).
+	 *            If this is negative, the message is printed without
+	 *            any line number reference
+	 * @param testName the name of the test
+	 * */
+	/*private String getErrorString(int pos, String testName) {
+		String res;
+		
+		if (pos >= 0 || line < pos) {
+			int last = 0, n = 1;
+			// we look for the last new line before position pos
+			last = line;
+			n++;
+			res = n + "." + (pos - last);
+		}
+		else
+			res = "";
+		return res;
+	}*/
+	
 
 }

@@ -1,5 +1,8 @@
 package javaBytecodeGenerator;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import errorMsg.ErrorMsg;
 import types.ClassType;
 import translation.Program;
@@ -39,6 +42,21 @@ public class Main {
 		    program.generateJavaBytecode();
 
 		    System.out.println("Java bytecode generation completed       \t[" + (System.currentTimeMillis() - time) + "ms]");
+		    
+		    ArrayList<String> testslist = new ArrayList<String>();
+		    program.generateJavaBytecodeForTests(testslist);
+		    for(String s : testslist)
+				try {
+					Runtime.getRuntime().exec("java " + s).waitFor();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+		    
+		    System.out.println("Java TEST bytecode generation completed       \t[" + (System.currentTimeMillis() - time) + "ms]");
+		    
+		    
 		}
 
 		System.out.println("Total compilation time was " + (System.currentTimeMillis() - totalTime) + "ms");

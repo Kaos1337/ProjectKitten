@@ -34,7 +34,7 @@ public class TestClassGenerator extends GeneralClassGenerator {
 	 */
 
 	public TestClassGenerator(ClassType clazz, Set<ClassMemberSignature> sigs) {
-		super(clazz.getName() + "Test", // name of the class
+		super(clazz.getName()+"Test", // name of the class
 				// the superclass of the Kitten Object class is set to be the
 				// Java java.lang.Object class
 				clazz.getSuperclass() != null ? clazz.getSuperclass().getName() : "java.lang.Object", clazz.getName() + ".kit"); // empty constant pool, at the
@@ -81,7 +81,7 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		InstructionList il = new InstructionList();
 		// getStaticTarget()).createINVOKEVIRTUAL(classGen));
 		il.insert(getFactory().createNew(clazztest.toBCEL().toString()));
-
+		System.out.println("AAAAAAAAAAAA" + clazztest.toBCEL().toString());
 		// inizio ciclo dei test
 		for (TestSignature t : clazztest.testLookup())
 			if (sigs == null || sigs.contains(t)) {

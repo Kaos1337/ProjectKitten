@@ -276,6 +276,7 @@ public class Block {
 					for (CodeSignature target: ((CALL) bytecode).getDynamicTargets())
 						target.getCode().cleanUp(done,program);
 			}
+			
 		}
 	}
 }
