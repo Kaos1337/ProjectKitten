@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import javaBytecodeGenerator.JavaClassGenerator;
 import javaBytecodeGenerator.TestClassGenerator;
@@ -27,7 +28,7 @@ public class Program {
 	 * The set of class signatures making up this program.
 	 */
 
-	private final Set<ClassMemberSignature> sigs;
+	private final CopyOnWriteArraySet<ClassMemberSignature> sigs;
 
 	/**
 	 * The starting code of this program. This is usually the {@code main} method of this program.
@@ -42,7 +43,7 @@ public class Program {
 	 * @param start the code where the program starts
 	 */
 
-	public Program(Set<ClassMemberSignature> sigs, CodeSignature start) {
+	public Program(CopyOnWriteArraySet<ClassMemberSignature> sigs, CodeSignature start) {
 		this.sigs = sigs;
 		this.start = start;
 
@@ -89,12 +90,12 @@ public class Program {
 	public void cleanUp() {
 		sigs.clear();
 		start.getCode().cleanUp(this);
-		/*for(ClassMemberSignature s : sigs){
+		for(ClassMemberSignature s : sigs){
 			if(!sigs.containsAll(s.getDefiningClass().fixtureLookup()))
 				sigs.addAll(s.getDefiningClass().fixtureLookup());
 			if(!sigs.containsAll(s.getDefiningClass().testLookup()))
 				sigs.addAll(s.getDefiningClass().testLookup());
-		}*/
+		}
 	}
 
 	/**

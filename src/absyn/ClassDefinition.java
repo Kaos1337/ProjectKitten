@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import translation.Program;
 import types.ClassMemberSignature;
@@ -195,7 +196,7 @@ public class ClassDefinition extends Absyn {
      */
 
     public Program translate() {
-    	Set<ClassMemberSignature> done = new HashSet<>();
+    	CopyOnWriteArraySet<ClassMemberSignature> done = new CopyOnWriteArraySet<>();
 
     	// we look up for the main method, if any
     	MethodSignature main = staticType.methodLookup("main", TypeList.EMPTY);
