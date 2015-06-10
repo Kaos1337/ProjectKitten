@@ -3,9 +3,9 @@ package javaBytecodeGenerator;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import errorMsg.ErrorMsg;
-import types.ClassType;
 import translation.Program;
+import types.ClassType;
+import errorMsg.ErrorMsg;
 
 public class Main {
 	public static void main(String[] args) {
@@ -17,7 +17,8 @@ public class Main {
 		long totalTime = System.currentTimeMillis();
 
 		// we build the class type for the file name passed as a parameter.
-		// This triggers type-checking of that class and of all classes referenced from it
+		// This triggers type-checking of that class and of all classes
+		// referenced from it
 		long time = System.currentTimeMillis();
 		ClassType clazz = ClassType.mkFromFileName(args[0]);
 		ErrorMsg errorMsg = clazz.getErrorMsg();
@@ -30,22 +31,27 @@ public class Main {
 			// we translate this class into Kitten bytecode
 			Program program = clazz.translate();
 
-			System.out.println("Translation into Kitten bytecode completed \t[" + (System.currentTimeMillis() - time) + "ms]");
+			System.out.println("Translation into Kitten bytecode completed \t[" + (System.currentTimeMillis() - time)
+					+ "ms]");
 
 			time = System.currentTimeMillis();
-			program.dumpCodeDot();
+			// program.dumpCodeDot();
 
-			System.out.println("Kitten bytecode dumping in dot format completed\t[" + (System.currentTimeMillis() - time) + "ms]");
+			System.out.println("Kitten bytecode dumping in dot format completed\t["
+					+ (System.currentTimeMillis() - time) + "ms]");
 
-			// we translate, into Java bytecode, the Kitten code of every class member which
-		    // is reachable from the class we translated. This also generates the class files
-		    program.generateJavaBytecode();
+			// we translate, into Java bytecode, the Kitten code of every class
+			// member which
+			// is reachable from the class we translated. This also generates
+			// the class files
+			program.generateJavaBytecode();
 
-		    System.out.println("Java bytecode generation completed       \t[" + (System.currentTimeMillis() - time) + "ms]");
-		    
-		    ArrayList<String> testslist = new ArrayList<String>();
-		    program.generateJavaBytecodeForTests(testslist);
-		    for(String s : testslist)
+			System.out.println("Java bytecode generation completed       \t[" + (System.currentTimeMillis() - time)
+					+ "ms]");
+
+			ArrayList<String> testslist = new ArrayList<String>();
+			program.generateJavaBytecodeForTests(testslist);
+			for (String s : testslist)
 				try {
 					Runtime.getRuntime().exec("java " + s).waitFor();
 				} catch (IOException e) {
@@ -53,10 +59,10 @@ public class Main {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-		    
-		    System.out.println("Java TEST bytecode generation completed       \t[" + (System.currentTimeMillis() - time) + "ms]");
-		    
-		    
+
+			System.out.println("Java TEST bytecode generation completed       \t["
+					+ (System.currentTimeMillis() - time) + "ms]");
+
 		}
 
 		System.out.println("Total compilation time was " + (System.currentTimeMillis() - totalTime) + "ms");

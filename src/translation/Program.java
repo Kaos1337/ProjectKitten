@@ -5,13 +5,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-
 import javaBytecodeGenerator.JavaClassGenerator;
 import javaBytecodeGenerator.TestClassGenerator;
+
 import types.ClassMemberSignature;
-import types.CodeSignature;
 import types.ClassType;
+import types.CodeSignature;
 import bytecode.Bytecode;
 import bytecode.CALL;
 import bytecode.FieldAccessBytecode;
@@ -28,10 +27,11 @@ public class Program {
 	 * The set of class signatures making up this program.
 	 */
 
-	private final CopyOnWriteArraySet<ClassMemberSignature> sigs;
+	private final Set<ClassMemberSignature> sigs;
 
 	/**
-	 * The starting code of this program. This is usually the {@code main} method of this program.
+	 * The starting code of this program. This is usually the {@code main}
+	 * method of this program.
 	 */
 
 	private final CodeSignature start;
@@ -39,15 +39,18 @@ public class Program {
 	/**
 	 * Builds a program, that is, a set of class member signatures.
 	 *
-	 * @param sigs the set of signatures
-	 * @param start the code where the program starts
+	 * @param sigs
+	 *            the set of signatures
+	 * @param start
+	 *            the code where the program starts
 	 */
 
-	public Program(CopyOnWriteArraySet<ClassMemberSignature> sigs, CodeSignature start) {
+	public Program(Set<ClassMemberSignature> sigs, CodeSignature start) {
 		this.sigs = sigs;
 		this.start = start;
 
-		// we clean-up the code, in order to remove useless nop's and merge blocks whenever possible
+		// we clean-up the code, in order to remove useless nop's and merge
+		// blocks whenever possible
 		if (start != null)
 			cleanUp();
 	}
@@ -88,39 +91,46 @@ public class Program {
 	 */
 
 	public void cleanUp() {
+
 		sigs.clear();
 		start.getCode().cleanUp(this);
-		for(ClassMemberSignature s : sigs){
-			if(!sigs.containsAll(s.getDefiningClass().fixtureLookup()))
+		ClassMemberSignature[] c = new ClassMemberSignature[sigs.size()];
+		sigs.toArray(c);
+
+		for (ClassMemberSignature s : c) {
+			if (!sigs.containsAll(s.getDefiningClass().fixtureLookup()))
 				sigs.addAll(s.getDefiningClass().fixtureLookup());
-			if(!sigs.containsAll(s.getDefiningClass().testLookup()))
+			if (!sigs.containsAll(s.getDefiningClass().testLookup()))
 				sigs.addAll(s.getDefiningClass().testLookup());
 		}
 	}
 
 	/**
 	 * Dumps the Kitten code of the signatures in this set into dot files. It is
-	 * assumed that all these signatures have already been translated into Kitten code.
+	 * assumed that all these signatures have already been translated into
+	 * Kitten code.
 	 */
 
 	public void dumpCodeDot() {
-		for (ClassMemberSignature sig: sigs)
+		for (ClassMemberSignature sig : sigs)
 			if (sig instanceof CodeSignature)
 				try {
 					dumpCodeDot((CodeSignature) sig, "./");
-				}
-				catch (IOException e) {
-						System.out.println("Could not dump Kitten code for " + sig);
+				} catch (IOException e) {
+					System.out.println("Could not dump Kitten code for " + sig);
 				}
 	}
 
 	/**
-	 * Writes a dot file containing a representation of the graph of blocks
-	 * for the code of the given code signature (method or constructor).
+	 * Writes a dot file containing a representation of the graph of blocks for
+	 * the code of the given code signature (method or constructor).
 	 *
-	 * @param sig the signature
-	 * @param dir the directory where the file must be written
-	 * @throws IOException if an input/output error occurs
+	 * @param sig
+	 *            the signature
+	 * @param dir
+	 *            the directory where the file must be written
+	 * @throws IOException
+	 *             if an input/output error occurs
 	 */
 
 	private void dumpCodeDot(CodeSignature sig, String dir) throws IOException {
@@ -142,11 +152,15 @@ public class Program {
 	 * Auxiliary method which writes in the dot file a box standing for the
 	 * given block, linked to the following blocks, if any.
 	 *
-	 * @param block the block
-	 * @param where the file where the dot representation must be written
-	 * @param done the set of blocks which have been processed up to now
+	 * @param block
+	 *            the block
+	 * @param where
+	 *            the file where the dot representation must be written
+	 * @param done
+	 *            the set of blocks which have been processed up to now
 	 * @return the identifier of {@code block} in the dot file
-	 * @throws IOException if an input/output error occurs
+	 * @throws IOException
+	 *             if an input/output error occurs
 	 */
 
 	private String toDot(Block block, FileWriter where, Set<Block> done) throws IOException {
@@ -154,20 +168,21 @@ public class Program {
 
 		// did we already dumped the given block in the file?
 		if (!done.contains(block)) {
-			// we never dumped the block before: we add it to the set of already dumped blocks
+			// we never dumped the block before: we add it to the set of already
+			// dumped blocks
 			done.add(block);
 
 			// we add a box to the dot file
 			where.write(name + " [ shape = box, label = \"block " + block.getId() + "\\n");
 
 			// in the middle there is a dump of the bytecode inside the block
-			where.write(block.getBytecode().toString().replaceAll("\n","\\\\n"));
+			where.write(block.getBytecode().toString().replaceAll("\n", "\\\\n"));
 
 			// end of the label of the node
 			where.write("\"];\n");
 
 			// we add a dot representation for the follows of the block
-			for (Block follow: block.getFollows())
+			for (Block follow : block.getFollows())
 				where.write(name + "->" + toDot(follow, where, done) + " [color = blue label = \"\" fontsize = 8]\n");
 		}
 
@@ -176,45 +191,45 @@ public class Program {
 	}
 
 	/**
-	 * Generates the Java bytecode for all the class types and
-	 * dumps the relative {@code .class} files on the file system.
+	 * Generates the Java bytecode for all the class types and dumps the
+	 * relative {@code .class} files on the file system.
 	 */
 
 	public void generateJavaBytecode() {
 		// we consider one class at the time and we generate its Java bytecode
-		for (ClassType clazz: ClassType.getAll())
+		for (ClassType clazz : ClassType.getAll())
 			try {
 				new JavaClassGenerator(clazz, sigs).getJavaClass().dump(clazz + ".class");
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				System.out.println("Could not dump the Java bytecode for class " + clazz);
 			}
 	}
-	
+
 	public void generateJavaBytecodeForTests(ArrayList<String> testslist) {
-		for (ClassType clazz: ClassType.getAll())
-			if(!clazz.testLookup().isEmpty())
+		for (ClassType clazz : ClassType.getAll())
+			if (!clazz.testLookup().isEmpty())
 				try {
 					new TestClassGenerator(clazz, sigs).getJavaClass().dump(clazz + "Test.class");
-					testslist.add(clazz+"Test");
-				}
-				catch (IOException e) {
+					testslist.add(clazz + "Test");
+				} catch (IOException e) {
 					System.out.println("Could not dump the Java bytecode for class " + clazz + "Test.class");
 				}
 	}
 
 	/**
-	 * Takes note that this program contains the given bytecode. This amounts
-	 * to adding some signature to the set of signatures for the program.
+	 * Takes note that this program contains the given bytecode. This amounts to
+	 * adding some signature to the set of signatures for the program.
 	 *
-	 * @param bytecode the bytecode
+	 * @param bytecode
+	 *            the bytecode
 	 */
 
 	protected void storeBytecode(Bytecode bytecode) {
 		if (bytecode instanceof FieldAccessBytecode)
 			sigs.add(((FieldAccessBytecode) bytecode).getField());
 		else if (bytecode instanceof CALL)
-			// a call instruction might call many methods or constructors at runtime
+			// a call instruction might call many methods or constructors at
+			// runtime
 			sigs.addAll(((CALL) bytecode).getDynamicTargets());
 	}
 }

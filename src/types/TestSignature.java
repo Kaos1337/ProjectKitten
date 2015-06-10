@@ -6,13 +6,15 @@ import javaBytecodeGenerator.TestClassGenerator;
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.MethodGen;
-import absyn.TestDeclaration;
+
 import translation.Block;
+import absyn.TestDeclaration;
 
 public class TestSignature extends CodeSignature {
 
 	/**
-	 * Constructs the signature of a method with the given name, return type and parameters types.
+	 * Constructs the signature of a method with the given name, return type and
+	 * parameters types.
 	 *
 	 * @param clazz
 	 *            the class where this test is defined
@@ -34,11 +36,14 @@ public class TestSignature extends CodeSignature {
 	}
 
 	/**
-	 * Generates an {@code invokevirtual} Java bytecode that calls this method. The Java {@code invokevirtual} bytecode calls a method by using the run-time
-	 * class of the receiver to look up for the method's implementation.
+	 * Generates an {@code invokevirtual} Java bytecode that calls this method.
+	 * The Java {@code invokevirtual} bytecode calls a method by using the
+	 * run-time class of the receiver to look up for the method's
+	 * implementation.
 	 *
 	 * @param classGen
-	 *            the class generator to be used to generate the {@code invokevirtual} Java bytecode
+	 *            the class generator to be used to generate the
+	 *            {@code invokevirtual} Java bytecode
 	 * @return an {@code invokevirtual} Java bytecode that calls this method
 	 */
 
@@ -50,13 +55,15 @@ public class TestSignature extends CodeSignature {
 
 		MethodGen testGen;
 		// http://www.tutorialspoint.com/java/java_basic_operators.htm
-		testGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private and static
+		testGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private
+																				// and
+																				// static
 				org.apache.bcel.generic.Type.VOID, // return type
 				new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.CLASS }, // TODO
 				// getParameters().toBCEL(), // parameters types, if any
 				null, // parameters names: yo man, we do not give a fuck too.
 						// Peace.
-				getName().toString(), // method's name
+				getName(), // method's name
 				classGen.getClassName(), // defining class
 				classGen.generateJavaBytecode(getCode()), // bytecode of the
 															// method
