@@ -13,8 +13,7 @@ import absyn.TestDeclaration;
 public class TestSignature extends CodeSignature {
 
 	/**
-	 * Constructs the signature of a method with the given name, return type and
-	 * parameters types.
+	 * Constructs the signature of a method with the given name, return type and parameters types.
 	 *
 	 * @param clazz
 	 *            the class where this test is defined
@@ -36,14 +35,10 @@ public class TestSignature extends CodeSignature {
 	}
 
 	/**
-	 * Generates an {@code invokevirtual} Java bytecode that calls this method.
-	 * The Java {@code invokevirtual} bytecode calls a method by using the
-	 * run-time class of the receiver to look up for the method's
-	 * implementation.
+	 * Generates an {@code invokevirtual} Java bytecode that calls this method. The Java {@code invokevirtual} bytecode calls a method by using the run-time class of the receiver to look up for the method's implementation.
 	 *
 	 * @param classGen
-	 *            the class generator to be used to generate the
-	 *            {@code invokevirtual} Java bytecode
+	 *            the class generator to be used to generate the {@code invokevirtual} Java bytecode
 	 * @return an {@code invokevirtual} Java bytecode that calls this method
 	 */
 
@@ -54,10 +49,9 @@ public class TestSignature extends CodeSignature {
 	public void createTest(TestClassGenerator classGen) {
 
 		MethodGen testGen;
+		System.out.println("-----------------------------------------"+getCode());
 		// http://www.tutorialspoint.com/java/java_basic_operators.htm
-		testGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private
-																				// and
-																				// static
+		testGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private and static
 				org.apache.bcel.generic.Type.VOID, // return type
 				new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.CLASS }, // TODO
 				// getParameters().toBCEL(), // parameters types, if any
@@ -65,8 +59,7 @@ public class TestSignature extends CodeSignature {
 						// Peace.
 				getName(), // method's name
 				classGen.getClassName(), // defining class
-				classGen.generateJavaBytecode(getCode()), // bytecode of the
-															// method
+				classGen.generateJavaBytecode(getCode()), // bytecode of the method
 				classGen.getConstantPool()); // constant pool
 
 		// we must always call these methods before the getMethod()

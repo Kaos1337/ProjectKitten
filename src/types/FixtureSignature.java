@@ -104,7 +104,7 @@ public class FixtureSignature extends CodeSignature {
 				// getParameters().toBCEL(), // parameters types, if any
 				null, // parameters names: yo man, we do not give a fuck too.
 						// Peace.
-				getName() + pos, // method's name
+				getName(), // method's name
 				classGen.getClassName(), // defining class
 				classGen.generateJavaBytecode(getCode()), // bytecode of the
 															// method

@@ -14,9 +14,7 @@ import types.FixtureSignature;
 import types.TestSignature;
 
 /**
- * A Java bytecode generator. It transforms the Kitten intermediate language
- * into Java bytecode that can be dumped to Java class files and run. It uses
- * the BCEL library to represent Java classes and dump them on the file-system.
+ * A Java bytecode generator. It transforms the Kitten intermediate language into Java bytecode that can be dumped to Java class files and run. It uses the BCEL library to represent Java classes and dump them on the file-system.
  *
  * @author <A HREF="mailto:fausto.spoto@univr.it">Fausto Spoto</A>
  */
@@ -27,18 +25,21 @@ public class TestClassGenerator extends GeneralClassGenerator {
 	/**
 	 * Builds a class generator for the given class type.
 	 *
-	 * @param clazz the class type
-	 * @param sigs a set of class member signatures. These are those that must
-	 *            be translated. If this is {@code null}, all class members are
-	 *            translated
+	 * @param clazz
+	 *            the class type
+	 * @param sigs
+	 *            a set of class member signatures. These are those that must be translated. If this is {@code null}, all class members are translated
 	 */
 
 	public TestClassGenerator(ClassType clazz, Set<ClassMemberSignature> sigs) {
-		super(clazz.getName()+"Test", // name of the class
+		super(clazz.getName() + "Test", // name of the class
 				// the superclass of the Kitten Object class is set to be the
 				// Java java.lang.Object class
 				clazz.getSuperclass() != null ? clazz.getSuperclass().getName() : "java.lang.Object", clazz.getName() + ".kit"); // empty constant pool, at the
 																																	// beginning
+
+		// we add the constructor
+		createConstr();
 
 		// we add the tests
 		for (TestSignature t : clazz.testLookup())
@@ -50,13 +51,57 @@ public class TestClassGenerator extends GeneralClassGenerator {
 			if (sigs == null || sigs.contains(t))
 				t.createFixture(this);
 
+		// we add the main
 		createMain(clazz, sigs);
+	}
+
+	private void createConstr() {
+		InstructionList il = new InstructionList();
+
+		// we add the following code at the beginning of the empty constructor
+		// for the Kitten Object class:
+		//
+		// aload 0 [ load "this" ]
+		// invokespecial java.lang.Object.<init>()
+		//
+		// In this way we respect the constraint of the Java bytecode
+		// that each constructor must call a constructor of the superclass
+		il.insert(InstructionFactory.RETURN);
+		il.insert(this.getFactory().createInvoke("java.lang.Object", // the name of the class
+				Constants.CONSTRUCTOR_NAME, // <init>
+				org.apache.bcel.generic.Type.VOID, // return type
+				org.apache.bcel.generic.Type.NO_ARGS, // parameters
+				Constants.INVOKESPECIAL)); // the type of call
+		il.insert(InstructionFactory.ALOAD_0);
+
+		// we create a method generator: constructors are just methods
+		// in Java bytecode, with special name <tt><init></tt>
+		MethodGen methodGen = new MethodGen(Constants.ACC_PUBLIC, // public
+				org.apache.bcel.generic.Type.VOID, // return type
+				Type.NO_ARGS, // parameters types, if any
+				null, // parameters names: we do not care
+				Constants.CONSTRUCTOR_NAME, // <tt><init></tt>
+				this.getClassName(), // name of the class
+				il, // bytecode of the constructor
+				this.getConstantPool()); // constant pool
+
+		// we must always call these methods before the <tt>getMethod()</tt>
+		// method below. They set the number of local variables and stack
+		// elements used by the code of the method
+		methodGen.setMaxStack();
+		methodGen.setMaxLocals();
+
+		// we add a method (actually, constructor) to the class that we are
+		// generating
+		this.addMethod(methodGen.getMethod());
 	}
 
 	private void createMain(ClassType clazztest, Set<ClassMemberSignature> sigs) {
 		MethodGen mainGen;
 
-		mainGen = new MethodGen(Constants.ACC_PUBLIC | Constants.ACC_STATIC, // private and static
+		mainGen = new MethodGen(Constants.ACC_PUBLIC | Constants.ACC_STATIC, // private
+																				// and
+																				// static
 				org.apache.bcel.generic.Type.VOID, // return type
 				new org.apache.bcel.generic.Type[] // parameters
 				{ new org.apache.bcel.generic.ArrayType("java.lang.String", 1) }, null, // parameters names: we do not care
@@ -88,10 +133,10 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 				il.append(InstructionFactory.DUP);
 
-				il.append(getFactory()
-						.createInvoke(clazztest.getName(), Constants.CONSTRUCTOR_NAME, Type.VOID, Type.NO_ARGS, Constants.INVOKESPECIAL));
+				il.append(getFactory().createInvoke(clazztest.getName(), Constants.CONSTRUCTOR_NAME, Type.VOID, Type.NO_ARGS, Constants.INVOKESPECIAL));
 				// /
-				// ciclo per i metodi delle fixture da eseguire sulla classe di test
+				// ciclo per i metodi delle fixture da eseguire sulla classe di
+				// test
 				for (FixtureSignature f : clazztest.fixtureLookup()) {
 					if (sigs == null || sigs.contains(f)) {
 
@@ -99,21 +144,26 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 						il.append(this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
 								f.getName(), // name of the method
-								org.apache.bcel.generic.Type.VOID, // return type
+								org.apache.bcel.generic.Type.VOID, // return
+																	// type
 								new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.OBJECT }, // parameters types
-								Constants.INVOKESTATIC)); // the type of invocation (static, special,
-															// ecc.)
+								Constants.INVOKESTATIC)); // the type of invocation (static, special, ecc.)
 
 					}
 				}
 
 				il.append(InstructionFactory.DUP);
 
-				il.append(this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
+				il.append(this.getFactory().createInvoke(clazztest.getName() + "Test", // name
+																						// of
+																						// the
+																						// class
 						t.getName(), // name of the method
 						org.apache.bcel.generic.Type.VOID, // return type
-						new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.OBJECT }, // parameters types
-						Constants.INVOKESTATIC)); // the type of invocation (static, special,
+						new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.OBJECT }, // parameters
+																									// types
+						Constants.INVOKESTATIC)); // the type of invocation
+													// (static, special,
 													// ecc.)
 
 			}
