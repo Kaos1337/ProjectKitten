@@ -104,8 +104,6 @@ public class Program {
 			for(TestSignature t : tests)
 				t.getCode().cleanUp(this);
 			
-			System.out.println("=================="+start.getDefiningClass().constructorLookup(TypeList.EMPTY).getCode().getBytecode());
-			
 			start.getDefiningClass().constructorLookup(TypeList.EMPTY).getCode().cleanUp(this);
 			sigs.add(start.getDefiningClass().constructorLookup(TypeList.EMPTY));
 		}
@@ -117,23 +115,7 @@ public class Program {
 		
 		for (ClassMemberSignature s : sigs)
 			System.out.println(s);
-		
-	
-		/*ClassMemberSignature[] c = new ClassMemberSignature[sigs.size()];
-		sigs.toArray(c);
 
-		//f.getCode().cleanUp(done, program);
-		//program.getSigs().add(f);
-		for (ClassMemberSignature s : c) {
-			Set<FixtureSignature> fixtures = s.getDefiningClass().fixtureLookup();
-			Set<TestSignature> tests = s.getDefiningClass().testLookup();
-			if (!(fixtures.isEmpty() && tests.isEmpty()))
-				sigs.add(s.getDefiningClass().constructorLookup(TypeList.EMPTY));
-			if (!sigs.containsAll(s.getDefiningClass().fixtureLookup()))
-				sigs.addAll(s.getDefiningClass().fixtureLookup());
-			if (!sigs.containsAll(s.getDefiningClass().testLookup()))
-				sigs.addAll(s.getDefiningClass().testLookup());
-		}*/
 	}
 
 	/**

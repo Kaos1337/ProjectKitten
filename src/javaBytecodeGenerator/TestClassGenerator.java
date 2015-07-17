@@ -142,23 +142,23 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 						il.append(InstructionFactory.DUP);
 
-						il.append(f.createINVOKESTATIC(this));/*this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
+						il.append(this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
 								f.getName(), // name of the method
 								org.apache.bcel.generic.Type.VOID, // return
 																	// type
-								new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.OBJECT }, // parameters types
-								Constants.INVOKESTATIC));*/ // the type of invocation (static, special, ecc.)
+								new org.apache.bcel.generic.Type[] { clazztest.toBCEL() }, // parameters types
+								Constants.INVOKESTATIC)); // the type of invocation (static, special, ecc.)
 
 					}
 				}
 
 				il.append(InstructionFactory.DUP);
 
-				il.append(t.createINVOKESTATIC(this));/*this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
+				il.append(this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
 						t.getName(), // name of the method
 						org.apache.bcel.generic.Type.VOID, // return type
-						new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.OBJECT }, // parameters types
-						Constants.INVOKESTATIC));*/ // the type of invocation
+						new org.apache.bcel.generic.Type[] { clazztest.toBCEL()}, // parameters types
+						Constants.INVOKESTATIC)); // the type of invocation
 
 			}
 		il.append(InstructionFactory.RETURN);

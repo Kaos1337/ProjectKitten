@@ -7,25 +7,42 @@ class MyClass{
     this.a:=0;
     this.b:= "aa\n"
   }
-  
-  test ciao {
-    assert(this.a<5);
-    assert (1<0)
+
+  fixture {
+   this.a := 10
   }
   
-  /*method void print(MyClass c){
-  	c.b.output()
-  }*/
+  test ata {
+    assert(this.a<50);
+ 
+    this.b.output();
+    if( this.a < 9 ) then {
+    	"impossibile".output();
+    	assert(1<0)
+    } else {
+    	"ok\n".output();
+    	assert(0<this.a)
+    }
+  }
+  
+  test testdifrancesco {
+  	int c := 0;
+    for(this.a := 0; this.a <= 11; this.a := this.a + 1){
+      c := c + 1
+    };
+    assert(c<this.a)
+  }
+  
+  test thisismyswamp {
+  	assert (this.a = 10  )
+  }
   
   method void main(){
     "ciao".output()
   }
   
   fixture {
-   this.a := 10
+   this.b := "lol"
   }
   
-  /*fixture {
-   a := 5
-  }*/
 }
