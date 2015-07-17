@@ -8,7 +8,6 @@ import translation.Program;
 import types.BooleanType;
 import types.ClassType;
 import types.CodeSignature;
-import types.MethodSignature;
 import types.Type;
 import types.TypeList;
 import bytecode.Bytecode;
@@ -119,6 +118,7 @@ public class Assert extends Command {
 
 	@Override
 	public Block translate(CodeSignature where, Block continuation) {
+		System.out.println("---------------------Entrato in translate di Assert");
 		// we get the type which must be returned by this the current method
 		Type returnType = getTypeChecker().getReturnType();
 
@@ -135,7 +135,6 @@ public class Assert extends Command {
 		Bytecode falso2 = new VIRTUALCALL(clazz , clazz.methodLookup("output", TypeList.EMPTY));
 		
 		program.dumpCodeDot();
-		System.out.println("---------------------Assert sbagliato");
 		
 		// if there is an initialising expression, we translate it
 		if (condition != null)

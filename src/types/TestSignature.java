@@ -4,8 +4,10 @@ import javaBytecodeGenerator.GeneralClassGenerator;
 import javaBytecodeGenerator.TestClassGenerator;
 
 import org.apache.bcel.Constants;
+import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.Type;
 
 import translation.Block;
 import absyn.TestDeclaration;
@@ -42,18 +44,17 @@ public class TestSignature extends CodeSignature {
 	 * @return an {@code invokevirtual} Java bytecode that calls this method
 	 */
 
-	public INVOKEVIRTUAL createINVOKEVIRTUAL(GeneralClassGenerator classGen) {
-		return (INVOKEVIRTUAL) createInvokeInstruction(classGen, Constants.INVOKEVIRTUAL);
+	public INVOKESTATIC createINVOKESTATIC(GeneralClassGenerator classGen) {
+		return (INVOKESTATIC) createInvokeInstruction(classGen, Constants.INVOKESTATIC);
 	}
 
 	public void createTest(TestClassGenerator classGen) {
 
 		MethodGen testGen;
-		System.out.println("-----------------------------------------"+getCode());
 		// http://www.tutorialspoint.com/java/java_basic_operators.htm
 		testGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private and static
 				org.apache.bcel.generic.Type.VOID, // return type
-				new org.apache.bcel.generic.Type[] { org.apache.bcel.generic.Type.CLASS }, // TODO
+				new Type[] { this.getDefiningClass().toBCEL() }, // TODO
 				// getParameters().toBCEL(), // parameters types, if any
 				null, // parameters names: yo man, we do not give a fuck too.
 						// Peace.

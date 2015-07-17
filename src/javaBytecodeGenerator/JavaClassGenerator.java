@@ -51,4 +51,4 @@ public class JavaClassGenerator extends GeneralClassGenerator {
 	
 	}
 
-	}
+}

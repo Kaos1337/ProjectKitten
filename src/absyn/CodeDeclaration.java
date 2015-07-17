@@ -9,6 +9,7 @@ import types.ClassType;
 import types.CodeSignature;
 import types.FixtureSignature;
 import types.TestSignature;
+import types.TypeList;
 import types.VoidType;
 import bytecode.Bytecode;
 import bytecode.BytecodeList;
@@ -179,6 +180,9 @@ public abstract class CodeDeclaration extends ClassMemberDeclaration {
 		for (TestSignature f : clazz.testLookup()) {
 			f.getAbstractSyntax().translate(done);
 		}
+		
+		if (!clazz.testLookup().isEmpty())
+			clazz.constructorLookup(TypeList.EMPTY).getAbstractSyntax().translate(done);
 
 	}
 }

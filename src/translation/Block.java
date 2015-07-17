@@ -5,11 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import types.ClassMemberSignature;
+import types.ClassType;
 import types.CodeSignature;
+import types.FixtureSignature;
+import types.TestSignature;
 import bytecode.BranchingBytecode;
 import bytecode.Bytecode;
 import bytecode.BytecodeList;
 import bytecode.CALL;
+import bytecode.FieldAccessBytecode;
 import bytecode.FinalBytecode;
 import bytecode.NOP;
 
@@ -275,8 +280,44 @@ public class Block {
 					// we continue by cleaning the dynamic targets
 					for (CodeSignature target: ((CALL) bytecode).getDynamicTargets())
 						target.getCode().cleanUp(done,program);
+				
+				cleanupTestsAndFixtures(bytecode, done, program);
 			}
 			
 		}
 	}
+	
+	private void cleanupTestsAndFixtures(Bytecode bytecode, Set<Block> done, Program program) {
+		if (bytecode instanceof FieldAccessBytecode) {
+			
+			ClassType clazz = ((FieldAccessBytecode) bytecode).getField().getDefiningClass();
+			
+			for (TestSignature t : clazz.testLookup()) {
+				t.getCode().cleanUp(done, program);
+				program.getSigs().add(t);
+			}
+			
+			for (FixtureSignature f : clazz.fixtureLookup()) {
+				f.getCode().cleanUp(done, program);
+				program.getSigs().add(f);
+			}
+			
+		} else if (bytecode instanceof CALL) 
+			for (CodeSignature target: ((CALL) bytecode).getDynamicTargets()){
+				for (TestSignature t : target.getDefiningClass().testLookup()) {
+					t.getCode().cleanUp(done, program);
+					program.getSigs().add(t);
+				}
+				
+				for (FixtureSignature f : target.getDefiningClass().fixtureLookup()) {
+					f.getCode().cleanUp(done, program);
+					program.getSigs().add(f);
+				}
+			}
+		
+	}
+	
+		
+		
+	
 }

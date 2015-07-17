@@ -9,7 +9,9 @@ import java.util.Set;
 import translation.Program;
 import types.ClassMemberSignature;
 import types.ClassType;
+import types.FixtureSignature;
 import types.MethodSignature;
+import types.TestSignature;
 import types.TypeList;
 
 /**
@@ -213,12 +215,35 @@ public class ClassDefinition extends Absyn {
 
 		// we look up for the main method, if any
 		MethodSignature main = staticType.methodLookup("main", TypeList.EMPTY);
-
+		
+		// we look up for fixtures and tests if any
+		/*Set<FixtureSignature> fixtures = staticType.fixtureLookup();
+		Set<TestSignature> tests = staticType.testLookup();*/
+		
 		// we translate everything that is reachable from the main method of
 		// this class (if any)
 		if (main != null)
 			main.getAbstractSyntax().translate(done);
-
+		
+		// we translate everything that is reachable from the tests and fixtures method of
+		// this class (if any)
+		/*for(FixtureSignature f : fixtures)
+			f.getAbstractSyntax().translate(done);	
+			
+		for(TestSignature t : tests)
+			t.getAbstractSyntax().translate(done);*/
+		
+		// we take the empty constructur for the CTest class when there are
+		// fixtures and/or tests
+		/*if(!(fixtures.isEmpty() && tests.isEmpty()))
+			staticType.constructorLookup(TypeList.EMPTY).getAbstractSyntax().translate(done);*/
+			
+			
 		return new Program(done, main);
 	}
 }
+
+
+
+
+

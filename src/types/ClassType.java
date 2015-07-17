@@ -462,13 +462,8 @@ public final class ClassType extends ReferenceType {
 		return tests.get(name);
 	}
 
-	public final Set<TestSignature> testLookup() {
-
-		Set<TestSignature> result = new HashSet<>();
-		for (Entry<String, TestSignature> entry : tests.entrySet()) {
-			result.add(entry.getValue());
-		}
-		return result;
+	public final Collection<TestSignature> testLookup() {
+		return tests.values();
 	}
 
 	public final Set<FixtureSignature> fixtureLookup() {

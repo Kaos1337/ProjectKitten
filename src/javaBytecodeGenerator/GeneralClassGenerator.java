@@ -38,9 +38,8 @@ public class GeneralClassGenerator extends ClassGen {
 	protected final static String[] noInterfaces = new String[] {};
 
 	public GeneralClassGenerator(String classname, String superclassname, String sourcefile) {
-		super(classname, superclassname, sourcefile, Constants.ACC_PUBLIC, // Java
-																			// attributes:
-																			// public!
+		super(classname, superclassname, sourcefile,
+				Constants.ACC_PUBLIC, // Java attributes: public!
 				noInterfaces, new ConstantPoolGen());
 		this.factory = new InstructionFactory(getConstantPool());
 	}

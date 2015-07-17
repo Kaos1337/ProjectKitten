@@ -3,14 +3,18 @@ package translation;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 import javaBytecodeGenerator.JavaClassGenerator;
 import javaBytecodeGenerator.TestClassGenerator;
-
 import types.ClassMemberSignature;
 import types.ClassType;
 import types.CodeSignature;
+import types.FixtureSignature;
+import types.TestSignature;
+import types.TypeList;
 import bytecode.Bytecode;
 import bytecode.CALL;
 import bytecode.FieldAccessBytecode;
@@ -30,8 +34,7 @@ public class Program {
 	private final Set<ClassMemberSignature> sigs;
 
 	/**
-	 * The starting code of this program. This is usually the {@code main}
-	 * method of this program.
+	 * The starting code of this program. This is usually the {@code main} method of this program.
 	 */
 
 	private final CodeSignature start;
@@ -86,29 +89,55 @@ public class Program {
 	}
 
 	/**
-	 * Cleans-up the code of this program. This amounts to removing useless
-	 * nop's or methods or constructors that are not called.
+	 * Cleans-up the code of this program. This amounts to removing useless nop's or methods or constructors that are not called.
 	 */
 
 	public void cleanUp() {
-
+		for (ClassMemberSignature s : sigs)
+			System.out.println("-----------"+s);
+		
 		sigs.clear();
 		start.getCode().cleanUp(this);
-		ClassMemberSignature[] c = new ClassMemberSignature[sigs.size()];
+		
+		Collection<TestSignature> tests = start.getDefiningClass().testLookup();
+		if(!tests.isEmpty()) {
+			for(TestSignature t : tests)
+				t.getCode().cleanUp(this);
+			
+			System.out.println("=================="+start.getDefiningClass().constructorLookup(TypeList.EMPTY).getCode().getBytecode());
+			
+			start.getDefiningClass().constructorLookup(TypeList.EMPTY).getCode().cleanUp(this);
+			sigs.add(start.getDefiningClass().constructorLookup(TypeList.EMPTY));
+		}
+		
+		Set<FixtureSignature> fixtures = start.getDefiningClass().fixtureLookup();
+		if(!fixtures.isEmpty())
+			for(FixtureSignature f : fixtures)
+				f.getCode().cleanUp(this);
+		
+		for (ClassMemberSignature s : sigs)
+			System.out.println(s);
+		
+	
+		/*ClassMemberSignature[] c = new ClassMemberSignature[sigs.size()];
 		sigs.toArray(c);
 
+		//f.getCode().cleanUp(done, program);
+		//program.getSigs().add(f);
 		for (ClassMemberSignature s : c) {
+			Set<FixtureSignature> fixtures = s.getDefiningClass().fixtureLookup();
+			Set<TestSignature> tests = s.getDefiningClass().testLookup();
+			if (!(fixtures.isEmpty() && tests.isEmpty()))
+				sigs.add(s.getDefiningClass().constructorLookup(TypeList.EMPTY));
 			if (!sigs.containsAll(s.getDefiningClass().fixtureLookup()))
 				sigs.addAll(s.getDefiningClass().fixtureLookup());
 			if (!sigs.containsAll(s.getDefiningClass().testLookup()))
 				sigs.addAll(s.getDefiningClass().testLookup());
-		}
+		}*/
 	}
 
 	/**
-	 * Dumps the Kitten code of the signatures in this set into dot files. It is
-	 * assumed that all these signatures have already been translated into
-	 * Kitten code.
+	 * Dumps the Kitten code of the signatures in this set into dot files. It is assumed that all these signatures have already been translated into Kitten code.
 	 */
 
 	public void dumpCodeDot() {
@@ -122,8 +151,7 @@ public class Program {
 	}
 
 	/**
-	 * Writes a dot file containing a representation of the graph of blocks for
-	 * the code of the given code signature (method or constructor).
+	 * Writes a dot file containing a representation of the graph of blocks for the code of the given code signature (method or constructor).
 	 *
 	 * @param sig
 	 *            the signature
@@ -149,8 +177,7 @@ public class Program {
 	}
 
 	/**
-	 * Auxiliary method which writes in the dot file a box standing for the
-	 * given block, linked to the following blocks, if any.
+	 * Auxiliary method which writes in the dot file a box standing for the given block, linked to the following blocks, if any.
 	 *
 	 * @param block
 	 *            the block
@@ -191,8 +218,7 @@ public class Program {
 	}
 
 	/**
-	 * Generates the Java bytecode for all the class types and dumps the
-	 * relative {@code .class} files on the file system.
+	 * Generates the Java bytecode for all the class types and dumps the relative {@code .class} files on the file system.
 	 */
 
 	public void generateJavaBytecode() {
@@ -210,15 +236,14 @@ public class Program {
 			if (!clazz.testLookup().isEmpty())
 				try {
 					new TestClassGenerator(clazz, sigs).getJavaClass().dump(clazz + "Test.class");
-					testslist.add(clazz + "Test");
+					////testslist.add(clazz + "Test");
 				} catch (IOException e) {
 					System.out.println("Could not dump the Java bytecode for class " + clazz + "Test.class");
 				}
 	}
 
 	/**
-	 * Takes note that this program contains the given bytecode. This amounts to
-	 * adding some signature to the set of signatures for the program.
+	 * Takes note that this program contains the given bytecode. This amounts to adding some signature to the set of signatures for the program.
 	 *
 	 * @param bytecode
 	 *            the bytecode
