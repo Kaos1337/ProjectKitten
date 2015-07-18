@@ -93,8 +93,6 @@ public class Program {
 	 */
 
 	public void cleanUp() {
-		for (ClassMemberSignature s : sigs)
-			System.out.println("-----------"+s);
 		
 		sigs.clear();
 		start.getCode().cleanUp(this);
@@ -112,9 +110,6 @@ public class Program {
 		if(!fixtures.isEmpty())
 			for(FixtureSignature f : fixtures)
 				f.getCode().cleanUp(this);
-		
-		for (ClassMemberSignature s : sigs)
-			System.out.println(s);
 
 	}
 

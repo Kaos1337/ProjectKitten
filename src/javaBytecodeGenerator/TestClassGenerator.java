@@ -3,6 +3,7 @@ package javaBytecodeGenerator;
 import java.util.Set;
 
 import org.apache.bcel.Constants;
+import org.apache.bcel.generic.FieldGen;
 import org.apache.bcel.generic.InstructionFactory;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
@@ -31,16 +32,18 @@ public class TestClassGenerator extends GeneralClassGenerator {
 	 * @param sigs
 	 *            a set of class member signatures. These are those that must be translated. If this is {@code null}, all class members are translated
 	 */
+	
+	
 
 	public TestClassGenerator(ClassType clazz, Set<ClassMemberSignature> sigs) {
 		super(clazz.getName() + "Test", // name of the class
 				"java.lang.Object", // the superclass of a Test Class is always Object
 				clazz.getName() + ".kit"); // empty constant pool, at the beginning
 
-		// we add the constructor
-		//createConstr();
-		//createConstructor(this);
-
+		
+		//we add fields for support the report
+		createFields();
+		
 		// we add the tests
 		for (TestSignature t : clazz.testLookup())
 			if (sigs == null || sigs.contains(t))
@@ -55,47 +58,17 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		createMain(clazz, sigs);
 	}
 
-	private void createConstr() {
-		InstructionList il = new InstructionList();
-
-		// we add the following code at the beginning of the empty constructor
-		// for the Kitten Object class:
-		//
-		// aload 0 [ load "this" ]
-		// invokespecial java.lang.Object.<init>()
-		//
-		// In this way we respect the constraint of the Java bytecode
-		// that each constructor must call a constructor of the superclass
+	private void createFields() {
+		FieldGen posAsserts;
 		
-		il.insert(InstructionFactory.RETURN);
-		il.insert(this.getFactory().createInvoke("java.lang.Object", // the name of the class
-				Constants.CONSTRUCTOR_NAME, // <init>
-				org.apache.bcel.generic.Type.VOID, // return type
-				org.apache.bcel.generic.Type.NO_ARGS, // parameters
-				Constants.INVOKESPECIAL)); // the type of call
-		
-		il.insert(InstructionFactory.ALOAD_0);
-
-		// we create a method generator: constructors are just methods
-		// in Java bytecode, with special name <tt><init></tt>
-		MethodGen methodGen = new MethodGen(Constants.ACC_PUBLIC, // public
-				org.apache.bcel.generic.Type.VOID, // return type
-				Type.NO_ARGS, // parameters types, if any
-				null, // parameters names: we do not care
-				Constants.CONSTRUCTOR_NAME, // <tt><init></tt>
-				this.getClassName(), // name of the class
-				il, // bytecode of the constructor
+		posAsserts = new FieldGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, 
+				Type.STRING, 
+				"posAsserts", 
 				this.getConstantPool()); // constant pool
-
-		// we must always call these methods before the <tt>getMethod()</tt>
-		// method below. They set the number of local variables and stack
-		// elements used by the code of the method
-		methodGen.setMaxStack();
-		methodGen.setMaxLocals();
-
-		// we add a method (actually, constructor) to the class that we are
-		// generating
-		this.addMethod(methodGen.getMethod());
+		
+		this.addField(posAsserts.getField());
+		
+		
 	}
 
 	private void createMain(ClassType clazztest, Set<ClassMemberSignature> sigs) {
@@ -125,11 +98,19 @@ public class TestClassGenerator extends GeneralClassGenerator {
 	private InstructionList getMainCode(ClassType clazztest, Set<ClassMemberSignature> sigs) {
 		InstructionList il = new InstructionList();
 		// getStaticTarget()).createINVOKEVIRTUAL(classGen));
-		il.insert(getFactory().createNew(clazztest.toBCEL().toString()));
+		
 		System.out.println("Generata TestClass per " + clazztest.toBCEL().toString());
 		// inizio ciclo dei test
 		for (TestSignature t : clazztest.testLookup())
 			if (sigs == null || sigs.contains(t)) {
+				
+				il.append(getFactory().createConstant(""));
+				
+				il.append(getFactory().createPutStatic(this.getClassName(), "posAsserts", Type.STRING));
+				
+				
+				// creo una nuova istanza dell'oggetto sul quale eseguire i test
+				il.append(getFactory().createNew(clazztest.toBCEL().toString()));
 
 				il.append(InstructionFactory.DUP);
 				
@@ -148,21 +129,32 @@ public class TestClassGenerator extends GeneralClassGenerator {
 																	// type
 								new org.apache.bcel.generic.Type[] { clazztest.toBCEL() }, // parameters types
 								Constants.INVOKESTATIC)); // the type of invocation (static, special, ecc.)
-
+						
+						
 					}
 				}
 
-				il.append(InstructionFactory.DUP);
-
+				//il.append(InstructionFactory.DUP);
+			//	il.append(getFactory().createConstant(""));
+						
+				//il.append(InstructionFactory.SWAP);
+				
 				il.append(this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
 						t.getName(), // name of the method
 						org.apache.bcel.generic.Type.VOID, // return type
 						new org.apache.bcel.generic.Type[] { clazztest.toBCEL()}, // parameters types
 						Constants.INVOKESTATIC)); // the type of invocation
-
+				
+				//createReport(il);
 			}
 		il.append(InstructionFactory.RETURN);
 		return il;
 
+	}
+
+	private void createReport(InstructionList il) {
+		
+		//il.append(getFactory().)
+		
 	}
 }

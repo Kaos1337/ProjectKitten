@@ -12,14 +12,27 @@ class MyClass{
    this.a := 10
   }
   
+  fixture {
+   this.b := "lol"
+  }
+  
+  test uno {
+    assert(1<50)
+  }
+  
+  test due {
+    assert(1>50)
+  }
+
   test ata {
-    assert(this.a<50);
+    assert(this.a>50);
  
     this.b.output();
-    if( this.a < 9 ) then {
+    
+    if( this.a < 9 ) then { /* falso */
     	"impossibile".output();
     	assert(1<0)
-    } else {
+    } else { /* vero */
     	"ok\n".output();
     	assert(0<this.a)
     }
@@ -41,8 +54,6 @@ class MyClass{
     "ciao".output()
   }
   
-  fixture {
-   this.b := "lol"
-  }
+  
   
 }

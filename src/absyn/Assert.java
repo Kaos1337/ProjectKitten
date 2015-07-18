@@ -2,6 +2,7 @@ package absyn;
 
 import java.io.FileWriter;
 
+import errorMsg.ErrorMsg;
 import semantical.TypeChecker;
 import translation.Block;
 import translation.Program;
@@ -11,7 +12,10 @@ import types.CodeSignature;
 import types.Type;
 import types.TypeList;
 import bytecode.Bytecode;
+import bytecode.BytecodeList;
+import bytecode.FinalBytecode;
 import bytecode.NEWSTRING;
+import bytecode.PUTFIELD;
 import bytecode.RETURN;
 import bytecode.VIRTUALCALL;
 
@@ -29,6 +33,8 @@ public class Assert extends Command {
 	 */
 
 	private Expression condition;
+	private String position;
+	
 
 	/**
 	 * Constructs the abstract syntax of a {@code assert} command.
@@ -88,6 +94,9 @@ public class Assert extends Command {
 			if (t != BooleanType.INSTANCE)
 				error("Assert must contains a boolean expression");
 		}
+		
+		position = checker.errorPosition(getPos());
+		
 		return checker;
 	}
 
@@ -118,54 +127,31 @@ public class Assert extends Command {
 
 	@Override
 	public Block translate(CodeSignature where, Block continuation) {
-		System.out.println("---------------------Entrato in translate di Assert");
-		// we get the type which must be returned by this the current method
-		Type returnType = getTypeChecker().getReturnType();
-
-		// we get a code which is made of a block containing the bytecode return
-		continuation = new Block(new RETURN(returnType));
 		
-		Bytecode falso = new NEWSTRING("test fallito @" + this.dotNodeName() + ".kit: " + where.getName());// TODO
-		//Bytecode falso2 = new VIRTUALCALL((ClassType) condition.getStaticType(), (MethodSignature) where);
+		//Bytecode falso = new NEWSTRING("assert fallito @" + where.getDefiningClass() + ".kit: " + where.getName() + " " + getPos() + "\n");// TODO
+		Bytecode falso = new NEWSTRING(", " + position);
+		
 		
 		//Traduzione String.kit per usare output in VIRTUALCALL
 		ClassType clazz = ClassType.mkFromFileName("String.kit");
 		Program program = clazz.translate();
 		
-		Bytecode falso2 = new VIRTUALCALL(clazz , clazz.methodLookup("output", TypeList.EMPTY));
+		//Bytecode print = new PUTFIELD((clazz+"Test);
+		Bytecode print = new VIRTUALCALL(clazz , clazz.methodLookup("output", TypeList.EMPTY));
 		
 		program.dumpCodeDot();
 		
 		// if there is an initialising expression, we translate it
-		if (condition != null)
+		if (condition != null){
 			// continuation = condition.translateAs(where, returnType, continuation);
-
-			continuation = condition.translateAsTest(where, continuation,
-					continuation.prefixedBy(falso2).prefixedBy(falso));
+			
+			// indico di non unire il bytecode nei prefixedBy
+			continuation.doNotMerge();
+			
+			continuation = condition.translateAsTest(where, continuation, /*continuation.prefixedBy(falso)*/
+					continuation.prefixedBy(print).prefixedBy(falso));
+		}
 		return continuation;
 	}
-	
-	/*
-	 * @param pos the position where the error must be reported
-	 *            (number of characters from the beginning of the file).
-	 *            If this is negative, the message is printed without
-	 *            any line number reference
-	 * @param testName the name of the test
-	 * */
-	/*private String getErrorString(int pos, String testName) {
-		String res;
-		
-		if (pos >= 0 || line < pos) {
-			int last = 0, n = 1;
-			// we look for the last new line before position pos
-			last = line;
-			n++;
-			res = n + "." + (pos - last);
-		}
-		else
-			res = "";
-		return res;
-	}*/
-	
 
 }
