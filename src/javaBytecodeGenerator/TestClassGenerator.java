@@ -14,6 +14,7 @@ import types.ClassType;
 import types.FixtureSignature;
 import types.TestSignature;
 import types.TypeList;
+import bytecode.IF_TRUE;
 
 /**
  * A Java bytecode generator. It transforms the Kitten intermediate language into Java bytecode that can be dumped to Java class files and run. It uses the BCEL library to represent Java classes and dump them on the file-system.
@@ -32,18 +33,15 @@ public class TestClassGenerator extends GeneralClassGenerator {
 	 * @param sigs
 	 *            a set of class member signatures. These are those that must be translated. If this is {@code null}, all class members are translated
 	 */
-	
-	
 
 	public TestClassGenerator(ClassType clazz, Set<ClassMemberSignature> sigs) {
 		super(clazz.getName() + "Test", // name of the class
 				"java.lang.Object", // the superclass of a Test Class is always Object
 				clazz.getName() + ".kit"); // empty constant pool, at the beginning
 
-		
-		//we add fields for support the report
+		// we add fields for support the report
 		createFields();
-		
+
 		// we add the tests
 		for (TestSignature t : clazz.testLookup())
 			if (sigs == null || sigs.contains(t))
@@ -60,15 +58,11 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 	private void createFields() {
 		FieldGen posAsserts;
-		
-		posAsserts = new FieldGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, 
-				Type.STRING, 
-				"posAsserts", 
-				this.getConstantPool()); // constant pool
-		
+
+		posAsserts = new FieldGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, Type.STRING, "posAsserts", this.getConstantPool()); // constant pool
+
 		this.addField(posAsserts.getField());
-		
-		
+
 	}
 
 	private void createMain(ClassType clazztest, Set<ClassMemberSignature> sigs) {
@@ -80,10 +74,7 @@ public class TestClassGenerator extends GeneralClassGenerator {
 				{ new org.apache.bcel.generic.ArrayType("java.lang.String", 1) }, null, // parameters names: we do not care
 				"main", // method's name
 				this.getClassName(), // defining class
-				this.getMainCode(clazztest, sigs),
-				// this.generateJavaBytecode(getMainCode()), // bytecode of the
-				// method
-				this.getConstantPool()); // constant pool
+				this.getMainCode(clazztest, sigs), this.getConstantPool()); // constant pool
 
 		// we must always call these methods before the getMethod()
 		// method below. They set the number of local variables and stack
@@ -98,25 +89,24 @@ public class TestClassGenerator extends GeneralClassGenerator {
 	private InstructionList getMainCode(ClassType clazztest, Set<ClassMemberSignature> sigs) {
 		InstructionList il = new InstructionList();
 		// getStaticTarget()).createINVOKEVIRTUAL(classGen));
-		
+
 		System.out.println("Generata TestClass per " + clazztest.toBCEL().toString());
 		// inizio ciclo dei test
 		for (TestSignature t : clazztest.testLookup())
 			if (sigs == null || sigs.contains(t)) {
-				
+
 				il.append(getFactory().createConstant(""));
-				
+
 				il.append(getFactory().createPutStatic(this.getClassName(), "posAsserts", Type.STRING));
-				
-				
+
 				// creo una nuova istanza dell'oggetto sul quale eseguire i test
 				il.append(getFactory().createNew(clazztest.toBCEL().toString()));
 
 				il.append(InstructionFactory.DUP);
-				
+
 				il.append(clazztest.constructorLookup(TypeList.EMPTY).createINVOKESPECIAL(this));
-				
-				//il.append(getFactory().createInvoke(clazztest.getName(), Constants.CONSTRUCTOR_NAME, Type.VOID, Type.NO_ARGS, Constants.INVOKESPECIAL));
+
+				// il.append(getFactory().createInvoke(clazztest.getName(), Constants.CONSTRUCTOR_NAME, Type.VOID, Type.NO_ARGS, Constants.INVOKESPECIAL));
 				// ciclo per i metodi delle fixture da eseguire sulla classe di test
 				for (FixtureSignature f : clazztest.fixtureLookup()) {
 					if (sigs == null || sigs.contains(f)) {
@@ -125,36 +115,66 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 						il.append(this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
 								f.getName(), // name of the method
-								org.apache.bcel.generic.Type.VOID, // return
-																	// type
+								org.apache.bcel.generic.Type.VOID, // return type
 								new org.apache.bcel.generic.Type[] { clazztest.toBCEL() }, // parameters types
 								Constants.INVOKESTATIC)); // the type of invocation (static, special, ecc.)
-						
-						
+
 					}
 				}
 
-				//il.append(InstructionFactory.DUP);
-			//	il.append(getFactory().createConstant(""));
-						
-				//il.append(InstructionFactory.SWAP);
-				
+				// il.append(InstructionFactory.DUP);
+				// il.append(getFactory().createConstant(""));
+
+				// il.append(InstructionFactory.SWAP);
+
 				il.append(this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
 						t.getName(), // name of the method
 						org.apache.bcel.generic.Type.VOID, // return type
-						new org.apache.bcel.generic.Type[] { clazztest.toBCEL()}, // parameters types
+						new org.apache.bcel.generic.Type[] { clazztest.toBCEL() }, // parameters types
 						Constants.INVOKESTATIC)); // the type of invocation
-				
-				//createReport(il);
+
+				//il.append(createReport(t.getName()));
 			}
 		il.append(InstructionFactory.RETURN);
+		
 		return il;
 
 	}
 
-	private void createReport(InstructionList il) {
-		
-		//il.append(getFactory().)
-		
+	private InstructionList createReport(String nometest) {
+		InstructionList il = new InstructionList();
+		InstructionList ramoVero = new InstructionList();
+		InstructionList ramoFalso = new InstructionList();
+		InstructionList fine = new InstructionList();
+
+		il.append(getFactory().createGetStatic(this.getClassName(), "posAsserts", Type.STRING));
+		il.append(getFactory().createConstant(""));
+		il.append(getFactory().createInvoke(runTime.String.class.getName(), "equals", Type.BOOLEAN, new Type[] { Type.STRING }, Constants.INVOKEVIRTUAL));
+
+		/*
+		 * IF TRUE goto vero -carico test fallito con posizioni goto fine vero: -carico test successo fine: -stampa return
+		 */
+		// stampa
+		fine.append(getFactory().createInvoke(runTime.String.class.getName(), "output", Type.VOID, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
+
+		// se e' falso carichiamo la stringa "test fallito [posAsserts]"
+		ramoFalso.append(getFactory().createConstant("\n- test " + nometest + ": fallito"));
+		ramoFalso.append(getFactory().createGetStatic(this.getClassName(), "posAsserts", Type.STRING));
+		ramoFalso.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", Type.STRING, new Type[] { Type.STRING }, Constants.INVOKEVIRTUAL));
+		ramoFalso.append(new org.apache.bcel.generic.GOTO(fine.getStart()));
+
+		// se e' vero carichiamo la stringa "test superato"
+		ramoVero.append(getFactory().createConstant("\n- test " + nometest + ": superato"));
+
+		// creo l'if
+		il.append((new IF_TRUE()).generateJavaBytecode(this, ramoVero.getStart(), ramoFalso.getStart()));
+
+		// aggancio i rami
+		il.append(ramoFalso);
+		il.append(ramoVero);
+		il.append(fine);
+
+		return il;
 	}
+
 }

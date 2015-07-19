@@ -2,21 +2,19 @@ package absyn;
 
 import java.io.FileWriter;
 
-import errorMsg.ErrorMsg;
 import semantical.TypeChecker;
 import translation.Block;
-import translation.Program;
 import types.BooleanType;
 import types.ClassType;
 import types.CodeSignature;
+import types.FieldSignature;
 import types.Type;
 import types.TypeList;
 import bytecode.Bytecode;
-import bytecode.BytecodeList;
-import bytecode.FinalBytecode;
+import bytecode.GETSTATIC;
 import bytecode.NEWSTRING;
 import bytecode.PUTFIELD;
-import bytecode.RETURN;
+import bytecode.PUTSTATIC;
 import bytecode.VIRTUALCALL;
 
 /**
@@ -28,20 +26,17 @@ import bytecode.VIRTUALCALL;
 public class Assert extends Command {
 
 	/**
-	 * The abstract syntax of the expression whose value is returned. It might
-	 * be {@code null}.
+	 * The abstract syntax of the expression whose value is returned. It might be {@code null}.
 	 */
 
 	private Expression condition;
 	private String position;
-	
 
 	/**
 	 * Constructs the abstract syntax of a {@code assert} command.
 	 *
 	 * @param pos
-	 *            the position in the source file where it starts the concrete
-	 *            syntax represented by this abstract syntax
+	 *            the position in the source file where it starts the concrete syntax represented by this abstract syntax
 	 * @param expression
 	 *            l'espressione booleana da valutare
 	 */
@@ -53,10 +48,8 @@ public class Assert extends Command {
 	}
 
 	/**
-	 * Adds abstract syntax class-specific information in the dot file
-	 * representing the abstract syntax of the {@code assert} command. This
-	 * amounts to adding an arc from the node for the {@code assert} command to
-	 * the abstract syntax for {@link #returned}.
+	 * Adds abstract syntax class-specific information in the dot file representing the abstract syntax of the {@code assert} command. This amounts to adding an arc from the node for the {@code assert} command to the abstract syntax for
+	 * {@link #returned}.
 	 *
 	 * @param where
 	 *            the file where the dot representation must be written
@@ -68,13 +61,8 @@ public class Assert extends Command {
 	}
 
 	/**
-	 * Performs the type-checking of the {@code return} command by using a given
-	 * type-checker. It type-checks the expression whose value is returned, if
-	 * it is not {@code null}, and checks that its static type can be assigned
-	 * to the type expected by the type-checker for the {@code return}
-	 * instructions. If no returned expression is present, then the it checks
-	 * that the type-checker expects {@code void} as a return type. It returns
-	 * the same type-checker passed as a parameter.
+	 * Performs the type-checking of the {@code return} command by using a given type-checker. It type-checks the expression whose value is returned, if it is not {@code null}, and checks that its static type can be assigned to the type expected by
+	 * the type-checker for the {@code return} instructions. If no returned expression is present, then the it checks that the type-checker expects {@code void} as a return type. It returns the same type-checker passed as a parameter.
 	 *
 	 * @param checker
 	 *            the type-checker to be used for type-checking
@@ -94,16 +82,14 @@ public class Assert extends Command {
 			if (t != BooleanType.INSTANCE)
 				error("Assert must contains a boolean expression");
 		}
-		
+
 		position = checker.errorPosition(getPos());
-		
+
 		return checker;
 	}
 
 	/**
-	 * Checks that this {@code assert} command does not contain
-	 * <i>dead-code</i>, that is, commands that can never be executed. This is
-	 * always true for {@code assert} commands.
+	 * Checks that this {@code assert} command does not contain <i>dead-code</i>, that is, commands that can never be executed. This is always true for {@code assert} commands.
 	 *
 	 * @return true, since this command doesn't contain commands.
 	 */
@@ -113,10 +99,7 @@ public class Assert extends Command {
 	}
 
 	/**
-	 * Translates this command into intermediate Kitten bytecode. Namely, it
-	 * returns a code which starts with the evaluation of {@link #returned}, if
-	 * any, and continues with a {@code return} bytecode for the type returned
-	 * by the current method.
+	 * Translates this command into intermediate Kitten bytecode. Namely, it returns a code which starts with the evaluation of {@link #returned}, if any, and continues with a {@code return} bytecode for the type returned by the current method.
 	 *
 	 * @param where
 	 *            the method or constructor where this expression occurs
@@ -127,29 +110,39 @@ public class Assert extends Command {
 
 	@Override
 	public Block translate(CodeSignature where, Block continuation) {
-		
-		//Bytecode falso = new NEWSTRING("assert fallito @" + where.getDefiningClass() + ".kit: " + where.getName() + " " + getPos() + "\n");// TODO
-		Bytecode falso = new NEWSTRING(", " + position);
-		
-		
-		//Traduzione String.kit per usare output in VIRTUALCALL
-		ClassType clazz = ClassType.mkFromFileName("String.kit");
-		Program program = clazz.translate();
-		
-		//Bytecode print = new PUTFIELD((clazz+"Test);
-		Bytecode print = new VIRTUALCALL(clazz , clazz.methodLookup("output", TypeList.EMPTY));
-		
-		program.dumpCodeDot();
-		
+
+		// Bytecode falso = new NEWSTRING("assert fallito @" + where.getDefiningClass() + ".kit: " + where.getName() + " " + getPos() + "\n");// TODO
+		// Bytecode falso = new NEWSTRING(", " + position);
+
+		FieldSignature posAsserts = new FieldSignature(ClassType.mk(where.getDefiningClass() + "Test"), ClassType.mk("String"), "posAsserts", new FieldDeclaration(0,
+				new ClassTypeExpression(0, "String"), "posAsserts", null));
+
+		// Traduzione String.kit per usare output in VIRTUALCALL
+		// ClassType clazz = ClassType.mkFromFileName("String.kit");
+		// Program program = clazz.translate();
+		/*
+		 * ldc "a" // aload posAsserts ldc "b" // ldc "falso" invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String; ...
+		 */
+		// Bytecode getfield = new GETFIELD(posAsserts); // dovrebbe essere un getstatic
+		Bytecode getfield = new GETSTATIC(posAsserts);
+		Bytecode newstring = new NEWSTRING(", " + position);
+
+		ClassType stringClass = ClassType.mk("String");
+
+		Bytecode concat = new VIRTUALCALL(stringClass, stringClass.methodLookup("concat", TypeList.EMPTY.push(stringClass)));
+		Bytecode putfield = new PUTSTATIC(posAsserts);
+		// Bytecode print = new PUTFIELD(new FieldDeclaration(0, new ClassTypeExpression(0, "String"), "posAsserts", null).getSignature());
+		// Bytecode print = new VIRTUALCALL(clazz , clazz.methodLookup("output", TypeList.EMPTY));
+
+		// program.dumpCodeDot();
+
 		// if there is an initialising expression, we translate it
-		if (condition != null){
-			// continuation = condition.translateAs(where, returnType, continuation);
-			
+		if (condition != null) {
 			// indico di non unire il bytecode nei prefixedBy
 			continuation.doNotMerge();
-			
-			continuation = condition.translateAsTest(where, continuation, /*continuation.prefixedBy(falso)*/
-					continuation.prefixedBy(print).prefixedBy(falso));
+
+			continuation = condition.translateAsTest(where, continuation, /* continuation.prefixedBy(falso) */
+					continuation.prefixedBy(putfield).prefixedBy(concat).prefixedBy(newstring).prefixedBy(getfield));
 		}
 		return continuation;
 	}
