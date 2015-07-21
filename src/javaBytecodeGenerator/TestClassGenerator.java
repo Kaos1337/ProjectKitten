@@ -4,10 +4,13 @@ import java.util.Set;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.FieldGen;
+import org.apache.bcel.generic.InstructionConstants;
 import org.apache.bcel.generic.InstructionFactory;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
+
+import com.sun.org.apache.bcel.internal.classfile.Field;
 
 import types.ClassMemberSignature;
 import types.ClassType;
@@ -15,6 +18,7 @@ import types.FixtureSignature;
 import types.TestSignature;
 import types.TypeList;
 import bytecode.IF_TRUE;
+import bytecode.NEWSTRING;
 
 /**
  * A Java bytecode generator. It transforms the Kitten intermediate language into Java bytecode that can be dumped to Java class files and run. It uses the BCEL library to represent Java classes and dump them on the file-system.
@@ -39,9 +43,6 @@ public class TestClassGenerator extends GeneralClassGenerator {
 				"java.lang.Object", // the superclass of a Test Class is always Object
 				clazz.getName() + ".kit"); // empty constant pool, at the beginning
 
-		// we add fields for support the report
-		createFields();
-
 		// we add the tests
 		for (TestSignature t : clazz.testLookup())
 			if (sigs == null || sigs.contains(t))
@@ -54,15 +55,6 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 		// we add the main
 		createMain(clazz, sigs);
-	}
-
-	private void createFields() {
-		FieldGen posAsserts;
-
-		posAsserts = new FieldGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, Type.STRING, "posAsserts", this.getConstantPool()); // constant pool
-
-		this.addField(posAsserts.getField());
-
 	}
 
 	private void createMain(ClassType clazztest, Set<ClassMemberSignature> sigs) {
@@ -95,10 +87,6 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		for (TestSignature t : clazztest.testLookup())
 			if (sigs == null || sigs.contains(t)) {
 
-				il.append(getFactory().createConstant(""));
-
-				il.append(getFactory().createPutStatic(this.getClassName(), "posAsserts", Type.STRING));
-
 				// creo una nuova istanza dell'oggetto sul quale eseguire i test
 				il.append(getFactory().createNew(clazztest.toBCEL().toString()));
 
@@ -129,7 +117,7 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 				il.append(this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
 						t.getName(), // name of the method
-						org.apache.bcel.generic.Type.VOID, // return type
+						ClassType.mk(runTime.String.class.getSimpleName()).toBCEL(),
 						new org.apache.bcel.generic.Type[] { clazztest.toBCEL() }, // parameters types
 						Constants.INVOKESTATIC)); // the type of invocation
 
@@ -140,16 +128,68 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		return il;
 
 	}
+	
+	private InstructionList getStartTime(Field store){
+	 	InstructionList il = new InstructionList();
+		
+		il.append(getFactory().createInvoke
+							("java/lang/System", // name of the class
+							"nanoTime", // name of the method or constructor
+							org.apache.bcel.generic.Type.LONG, // return type
+							org.apache.bcel.generic.Type.NO_ARGS,
+							Constants.INVOKESTATIC));
+		//il.append(getFactory().createPutStatic(getClassName(), store.getName(), Type.LONG));
+		//il.append() ??? senza il putstatic devo salvarlo sullo stack
+		return il;
+	 }
 
+	private InstructionList printTime(Field store){
+		InstructionList il = new InstructionList();
+		// metto sullo stack i millisecondi attuali
+		
+		il.append(getFactory().createInvoke
+				("java/lang/System", // name of the class
+				"nanoTime", // name of the method or constructor
+				org.apache.bcel.generic.Type.LONG, // return type
+				org.apache.bcel.generic.Type.NO_ARGS,
+				Constants.INVOKESTATIC));
+		// carico i millisecondi salvati all'inizio
+		//il.append(getFactory().createGetStatic(getClassName(), store.getName(), Type.LONG));
+		/*
+		 	int msint = (int) ((fine-inizio)/1000000);
+			int msdec = (int) ((msint*100) - ((fine-inizio)/10000));
+		 * */
+		/*
+		 * lsub
+		 * dup
+		 * push 1000000
+		 * */
+		il.append(InstructionConstants.LSUB);
+		il.append(InstructionConstants.DUP);
+		///il.append(getFactory().create)
+		
+		
+		
+		/*
+		 
+		 il.append();
+		 
+		 * */
+		
+		return il;
+	}
+	
+	 
 	private InstructionList createReport(String nometest) {
 		InstructionList il = new InstructionList();
 		InstructionList ramoVero = new InstructionList();
 		InstructionList ramoFalso = new InstructionList();
 		InstructionList fine = new InstructionList();
 
-		il.append(getFactory().createGetStatic(this.getClassName(), "posAsserts", Type.STRING));
-		il.append(getFactory().createConstant(""));
-		il.append(getFactory().createInvoke(runTime.String.class.getName(), "equals", Type.BOOLEAN, new Type[] { Type.STRING }, Constants.INVOKEVIRTUAL));
+		il.append(InstructionConstants.DUP);
+		
+		il.append(new NEWSTRING("").generateJavaBytecode(this));
+		il.append(getFactory().createInvoke(runTime.String.class.getName(), "equals", Type.BOOLEAN, new Type[] { Type.getType("String") }, Constants.INVOKEVIRTUAL));
 
 		/*
 		 * IF TRUE goto vero -carico test fallito con posizioni goto fine vero: -carico test successo fine: -stampa return
@@ -158,13 +198,16 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		fine.append(getFactory().createInvoke(runTime.String.class.getName(), "output", Type.VOID, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
 
 		// se e' falso carichiamo la stringa "test fallito [posAsserts]"
-		ramoFalso.append(getFactory().createConstant("\n- test " + nometest + ": fallito"));
-		ramoFalso.append(getFactory().createGetStatic(this.getClassName(), "posAsserts", Type.STRING));
-		ramoFalso.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", Type.STRING, new Type[] { Type.STRING }, Constants.INVOKEVIRTUAL));
+		//ramoFalso.append(getFactory().createConstant("\n- test " + nometest + ": fallito"));
+		ramoFalso.append(getFactory().createPrintln("\n- test " + nometest + ": fallito"));
+		//ramoFalso.append(getFactory().createGetStatic(this.getClassName(), "posAsserts", Type.getType("String")));
+		//ramoFalso.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", Type.getType("String"), new Type[] { Type.getType("String") }, Constants.INVOKEVIRTUAL));
 		ramoFalso.append(new org.apache.bcel.generic.GOTO(fine.getStart()));
 
 		// se e' vero carichiamo la stringa "test superato"
-		ramoVero.append(getFactory().createConstant("\n- test " + nometest + ": superato"));
+		ramoVero.append(getFactory().createPrintln("\n- test " + nometest + ": superato"));
+		
+		//ramoVero.append(getFactory().createConstant("\n- test " + nometest + ": superato"));
 
 		// creo l'if
 		il.append((new IF_TRUE()).generateJavaBytecode(this, ramoVero.getStart(), ramoFalso.getStart()));

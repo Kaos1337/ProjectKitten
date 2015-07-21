@@ -76,7 +76,7 @@ public class NEWSTRING extends NonCallingSequentialBytecode {
 		il.insert(factory.createConstant(value));
 		il.insert(InstructionFactory.DUP);
 		il.insert(factory.createNew(kittenStringName));
-
+		
 		return il;
 	}
 }
