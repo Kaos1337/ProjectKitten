@@ -4,6 +4,7 @@ import java.io.FileWriter;
 
 import semantical.TypeChecker;
 import translation.Block;
+import translation.Program;
 import types.BooleanType;
 import types.ClassType;
 import types.CodeSignature;
@@ -13,7 +14,6 @@ import types.TypeList;
 import bytecode.Bytecode;
 import bytecode.GETSTATIC;
 import bytecode.NEWSTRING;
-import bytecode.PUTFIELD;
 import bytecode.PUTSTATIC;
 import bytecode.VIRTUALCALL;
 
@@ -110,39 +110,17 @@ public class Assert extends Command {
 
 	@Override
 	public Block translate(CodeSignature where, Block continuation) {
-
-		// Bytecode falso = new NEWSTRING("assert fallito @" + where.getDefiningClass() + ".kit: " + where.getName() + " " + getPos() + "\n");// TODO
-		// Bytecode falso = new NEWSTRING(", " + position);
-
-		FieldSignature posAsserts = new FieldSignature(ClassType.mk(where.getDefiningClass() + "Test"), ClassType.mk("String"), "posAsserts", new FieldDeclaration(0,
-				new ClassTypeExpression(0, "String"), "posAsserts", null));
-
-		// Traduzione String.kit per usare output in VIRTUALCALL
-		// ClassType clazz = ClassType.mkFromFileName("String.kit");
-		// Program program = clazz.translate();
-		/*
-		 * ldc "a" // aload posAsserts ldc "b" // ldc "falso" invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String; ...
-		 */
-		// Bytecode getfield = new GETFIELD(posAsserts); // dovrebbe essere un getstatic
-		Bytecode getfield = new GETSTATIC(posAsserts);
+		ClassType stringClass = ClassType.mk(runTime.String.class.getSimpleName());
 		Bytecode newstring = new NEWSTRING(", " + position);
 
-		ClassType stringClass = ClassType.mk("String");
-
 		Bytecode concat = new VIRTUALCALL(stringClass, stringClass.methodLookup("concat", TypeList.EMPTY.push(stringClass)));
-		Bytecode putfield = new PUTSTATIC(posAsserts);
-		// Bytecode print = new PUTFIELD(new FieldDeclaration(0, new ClassTypeExpression(0, "String"), "posAsserts", null).getSignature());
-		// Bytecode print = new VIRTUALCALL(clazz , clazz.methodLookup("output", TypeList.EMPTY));
-
-		// program.dumpCodeDot();
-
+		
 		// if there is an initialising expression, we translate it
 		if (condition != null) {
 			// indico di non unire il bytecode nei prefixedBy
 			continuation.doNotMerge();
 
-			continuation = condition.translateAsTest(where, continuation, /* continuation.prefixedBy(falso) */
-					continuation.prefixedBy(putfield).prefixedBy(concat).prefixedBy(newstring).prefixedBy(getfield));
+			continuation = condition.translateAsTest(where, continuation, continuation.prefixedBy(concat).prefixedBy(newstring));
 		}
 		return continuation;
 	}

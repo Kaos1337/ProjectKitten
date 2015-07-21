@@ -6,9 +6,13 @@ import javaBytecodeGenerator.TestClassGenerator;
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionFactory;
+import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 
+import bytecode.NEWSTRING;
 import translation.Block;
 import absyn.TestDeclaration;
 
@@ -52,15 +56,42 @@ public class TestSignature extends CodeSignature {
 
 		MethodGen testGen;
 		// http://www.tutorialspoint.com/java/java_basic_operators.htm
+		
+		InstructionList testbody = new InstructionList();
+		testbody = classGen.generateJavaBytecode(getCode());
+		testbody.insert(new NEWSTRING("").generateJavaBytecode(classGen));
+		
+		/*for(int i = 0; i <= testbody.getInstructionPositions().length; i++){
+			Instruction in = testbody.findHandle(testbody.getInstructionPositions()[i]).getInstruction();
+			System.out.println(Instruction.getComparator().equals(in, InstructionFactory.RETURN));
+			if (Instruction.getComparator().equals(in, InstructionFactory.RETURN))
+			in = InstructionFactory.ARETURN;
+		}*/
+		InstructionList testfinal = new InstructionList();
+		for(Instruction i : testbody.getInstructions()){
+			if(Instruction.getComparator().equals(i, InstructionFactory.RETURN))
+				testfinal.append(InstructionFactory.ARETURN);
+			else
+				testfinal.append(i);
+		}
+		System.out.println("=======================");
+		
+		for(Instruction i : testbody.getInstructions()){
+			System.out.println(Instruction.getComparator().equals(i, InstructionFactory.RETURN));
+			if (Instruction.getComparator().equals(i, InstructionFactory.RETURN));
+		}
+		
+		System.out.println("++++++++++++++++++++++++");
+		
+		//ClassType.mk(runTime.String.class.getSimpleName()).toBCEL(),
 		testGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private and static
-				org.apache.bcel.generic.Type.VOID, // return type
-				new Type[] { this.getDefiningClass().toBCEL() }, // TODO
-				// getParameters().toBCEL(), // parameters types, if any
-				null, // parameters names: yo man, we do not give a fuck too.
-						// Peace.
+				//Type.getReturnType("String"), // return type
+				ClassType.mk(runTime.String.class.getSimpleName()).toBCEL(),
+				new Type[] { this.getDefiningClass().toBCEL() }, // parameters types, if any
+				null, // parameters names: we do not care
 				getName(), // method's name
 				classGen.getClassName(), // defining class
-				classGen.generateJavaBytecode(getCode()), // bytecode of the method
+				testbody, // bytecode of the method
 				classGen.getConstantPool()); // constant pool
 
 		// we must always call these methods before the getMethod()
