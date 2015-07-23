@@ -74,7 +74,6 @@ public class ConstructorSignature extends CodeSignature {
 		// In this way we respect the constraint of the Java bytecode
 		// that each constructor must call a constructor of the superclass
 		if (getDefiningClass().getName().equals("Object")) {
-			System.out.println("-----------------------------Entrato");
 			il.insert(classGen.getFactory().createInvoke
 				("java.lang.Object", // the name of the class
 				Constants.CONSTRUCTOR_NAME, // <init>

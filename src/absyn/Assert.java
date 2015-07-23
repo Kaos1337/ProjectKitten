@@ -13,7 +13,6 @@ import types.TypeList;
 import bytecode.Bytecode;
 import bytecode.GETSTATIC;
 import bytecode.NEWSTRING;
-import bytecode.PUTFIELD;
 import bytecode.PUTSTATIC;
 import bytecode.VIRTUALCALL;
 

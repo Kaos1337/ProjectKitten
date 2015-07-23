@@ -9,6 +9,8 @@ import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 
+import com.sun.org.apache.bcel.internal.classfile.Field;
+
 import types.ClassMemberSignature;
 import types.ClassType;
 import types.FixtureSignature;
@@ -93,6 +95,7 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 		System.out.println("Generata TestClass per " + clazztest.toBCEL().toString());
 		// inizio ciclo dei test
+		il.append(getFactory().createPrintln("Esecuzione dei test per classe "+ this.getClassName()+":"));
 		for (TestSignature t : clazztest.testLookup())
 			if (sigs == null || sigs.contains(t)) {
 
@@ -140,6 +143,62 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		
 		return il;
 
+	}
+	
+	private InstructionList pushTime(){
+	 	InstructionList il = new InstructionList();
+	 	
+		// metto sullo stack i millisecondi attuali
+		il.append(getFactory().createInvoke
+							("java/lang/System", // name of the class
+							"nanoTime", // name of the method or constructor
+							org.apache.bcel.generic.Type.LONG, // return type
+							org.apache.bcel.generic.Type.NO_ARGS,
+							Constants.INVOKESTATIC));
+		return il;
+	 }
+
+	/**
+	 * Ottiene il tempo passato a seguito dell'invocazione del test
+	 * Assume di trovare sullo stack due valori di tempo in nanosecondi
+	 * e lascia una stringa che rappresenta un tempo in millisecondi 
+	 * e decimali passato tra i due 
+	 * <br>..., time(long)_old, time(long)_recent; ..., difference(string?)<br>
+	 * @return
+	 */
+	private InstructionList printTime(){
+		InstructionList il = new InstructionList();
+		
+		//credo sia meglio fare un secondo pushTime prima ancora di chiamare print time
+		//cosìcchè ci sia la minor dispersione possibile di tempo
+		/*il.append(getFactory().createInvoke
+				("java/lang/System", // name of the class
+				"nanoTime", // name of the method or constructor
+				org.apache.bcel.generic.Type.LONG, // return type
+				org.apache.bcel.generic.Type.NO_ARGS,
+				Constants.INVOKESTATIC));*/
+
+		// i millisecondi iniziali ce li ho sullo stack, faccio uno swap
+		il.append(InstructionFactory.SWAP);
+		/*
+		long msint = (a-b)/1000000;
+		long msdec = (msint*100) - ((a-b)/10000);
+		 * */
+		/*
+		 * lsub
+		 * dup
+		 * push 1000000
+		 * ldiv
+		 * */
+		il.append(InstructionFactory.LSUB);
+		il.append(InstructionFactory.DUP); // mi serve per il calcolo di msdec
+		il.append(getFactory().createConstant(1000000));
+		il.append(InstructionFactory.LDIV);
+		// ora mi trovo msint sullo stack
+		
+		
+		
+		return il;
 	}
 
 	private InstructionList createReport(String nometest) {
