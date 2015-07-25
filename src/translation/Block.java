@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import types.ClassMemberSignature;
 import types.ClassType;
 import types.CodeSignature;
 import types.FixtureSignature;

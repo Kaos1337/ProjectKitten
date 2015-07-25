@@ -4,17 +4,19 @@ class MyClass{
   field String b
   
   constructor() {
-    this.a:=0;
-    this.b:= "aa\n"
+   /* this.a:=0;
+    this.b:= "aa\n"*/
   }
 
-  fixture {
+ /* fixture {
    this.a := 10
   }
   
   fixture {
+   this.b := "lol";
    this.b := "lol"
   }
+  */
   
   test uno {
     assert(1<50)
@@ -23,8 +25,8 @@ class MyClass{
   test due {
     assert(1>50)
   }
-
-  /*test ata {
+/*
+  test ata {
     assert(this.a>50);
  
     this.b.output();
@@ -51,11 +53,9 @@ class MyClass{
   }*/
   
   method void main(){
-  	MyClass m := new MyClass();
-  	int io := m.a;
-    "ciao".output()
-  }
-  
-  
+    "ciao".output()   
+    }
+    
+
   
 }

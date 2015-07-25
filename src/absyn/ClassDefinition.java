@@ -9,9 +9,7 @@ import java.util.Set;
 import translation.Program;
 import types.ClassMemberSignature;
 import types.ClassType;
-import types.FixtureSignature;
 import types.MethodSignature;
-import types.TestSignature;
 import types.TypeList;
 
 /**

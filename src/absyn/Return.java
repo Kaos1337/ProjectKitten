@@ -82,11 +82,12 @@ public class Return extends Command {
 	protected TypeChecker typeCheckAux(TypeChecker checker) {
 		// we get from the type-checker the expected type for the return instructions
 		Type expectedReturnType = checker.getReturnType();
-
+		
 		// a return command without expression is legal only inside a void method
 		if (returned == null && expectedReturnType != VoidType.INSTANCE)
 			error("missing return value");
 
+		
 		// if there is a returned expression, we check that its static
 		// type can be assigned to the expected return type
 		Type returnedType;

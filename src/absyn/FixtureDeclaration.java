@@ -33,18 +33,18 @@ public class FixtureDeclaration extends CodeDeclaration {
 	/**
 	 * Yields the signature of this fixture declaration.
 	 *
-	 * @return the signature of this constructor declaration.
+	 * @return the signature of this fixture declaration.
 	 *         Yields {@code null} if type-checking has not been performed yet
 	 */
 
-	/*@Override
-	public ConstructorSignature getSignature() {
-		return (ConstructorSignature) super.getSignature();
-	}*/
+	@Override
+	public FixtureSignature getSignature() {
+		return (FixtureSignature) super.getSignature();
+	}
 
 	/**
 	 * Adds arcs between the dot node for this piece of abstract syntax
-	 * and those representing the body of the constructor.
+	 * and those representing the body of the fixture.
 	 *
 	 * @param where the file where the dot representation must be written
 	 */
@@ -55,15 +55,15 @@ public class FixtureDeclaration extends CodeDeclaration {
 	}
 
 	/**
-	 * Adds the signature of this constructor declaration to the given class.
+	 * Adds the signature of this fixture declaration to the given class.
 	 *
-	 * @param clazz the class where the signature of this constructor
+	 * @param clazz the class where the signature of this fixture
 	 *              declaration must be added
 	 */
 
 	@Override
 	protected void addTo(ClassType clazz) {
-		FixtureSignature fs = new FixtureSignature(clazz, this, super.getPos());
+		FixtureSignature fs = new FixtureSignature(clazz, this);
 		clazz.addFixture(fs);
 		setSignature(fs);
 	}
@@ -84,11 +84,14 @@ public class FixtureDeclaration extends CodeDeclaration {
 		TypeChecker checker = new TypeChecker(VoidType.INSTANCE, clazz.getErrorMsg());
 		checker = checker.putVar("this", clazz);
 
+		// we type-check the body of the fixture in the resulting type-checker
 		getBody().typeCheck(checker);
 
-		/* Secondo me non serve - Davide
-		 * if (! getBody().checkForDeadcode())
-			error(checker, "fixture deadcode");*/
-		
+		// we check that there is no dead-code in the body of the fixture
+		getBody().checkForDeadcode();
+
+		// fixture return nothing, so that we do not check whether
+		// a return statement is always present at the end of every
+		// syntactical execution path in the body of a fixture
 	}
 }

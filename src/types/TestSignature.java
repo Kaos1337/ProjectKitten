@@ -5,7 +5,6 @@ import javaBytecodeGenerator.TestClassGenerator;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.generic.INVOKESTATIC;
-import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 
@@ -33,7 +32,7 @@ public class TestSignature extends CodeSignature {
 
 	@Override
 	public String toString() {
-		return getDefiningClass() + "test " + getName();
+		return getDefiningClass() + " test " + getName();
 	}
 
 	/**
@@ -50,11 +49,9 @@ public class TestSignature extends CodeSignature {
 
 	public void createTest(TestClassGenerator classGen) {
 
-		MethodGen testGen;
-		// http://www.tutorialspoint.com/java/java_basic_operators.htm
-		testGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private and static
+		MethodGen testGen = new MethodGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, // private and static
 				org.apache.bcel.generic.Type.VOID, // return type
-				new Type[] { this.getDefiningClass().toBCEL() }, // TODO
+				new Type[] { this.getDefiningClass().toBCEL() },
 				// getParameters().toBCEL(), // parameters types, if any
 				null, // parameters names: yo man, we do not give a fuck too.
 						// Peace.
@@ -76,7 +73,7 @@ public class TestSignature extends CodeSignature {
 
 	/**
 	 * Adds a prefix to the Kitten bytecode generated for this method.
-	 *
+	 * For tests we don't do anything
 	 * @param code
 	 *            the code already compiled for this method
 	 * @return {@code code} itself

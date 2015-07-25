@@ -20,6 +20,7 @@ import absyn.FixtureDeclaration;
 public class FixtureSignature extends CodeSignature {
 
 	private final int pos;
+	private static int nfixture = 0;
 
 	/**
 	 * Constructs a signature for a constructor, given its parameters types and the class it belongs to.
@@ -30,13 +31,11 @@ public class FixtureSignature extends CodeSignature {
 	 *            the types of the parameters of the constructor
 	 * @param abstractSyntax
 	 *            the abstract syntax of the declaration of this constructor
-	 * @param pos
-	 *            the position in the code
 	 */
-	public FixtureSignature(ClassType clazz, FixtureDeclaration abstractSyntax, int pos) {
+	public FixtureSignature(ClassType clazz, FixtureDeclaration abstractSyntax) {
 		// a constructor always returns void and its name is by default init
-		super(clazz, VoidType.INSTANCE, TypeList.EMPTY, "fixture" + pos, abstractSyntax);
-		this.pos = pos;
+		super(clazz, VoidType.INSTANCE, TypeList.EMPTY, "fixture" + nfixture, abstractSyntax);
+		this.pos = nfixture++;
 	}
 
 	@Override
@@ -57,23 +56,15 @@ public class FixtureSignature extends CodeSignature {
 	}
 
 	/**
-	 * Adds a prefix to the Kitten bytecode generated for this constructor. That is a call to the empty constructor of the superclass (if any)
-	 *
+	 * Adds a prefix to the Kitten bytecode generated for this method.
+	 * For fixtures we don't do anything
 	 * @param code
 	 *            the code already compiled for this constructor
-	 * @return {@code code} prefixed with a call to the empty constructor of the superclass
+	 * @return {@code code} code itself
 	 */
 
 	@Override
 	protected Block addPrefixToCode(Block code) {
-		// we prefix a piece of code that calls the constructor of
-		// the superclass (if any)
-		/*
-		 * if (!getDefiningClass().getName().equals("Object")) { ClassType superclass = getDefiningClass().getSuperclass();
-		 * 
-		 * code = new LOAD(0, getDefiningClass()).followedBy(new CONSTRUCTORCALL(superclass .constructorLookup(TypeList.EMPTY)).followedBy(code)); }
-		 */
-
 		return code;
 	}
 

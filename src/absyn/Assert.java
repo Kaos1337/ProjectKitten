@@ -13,7 +13,6 @@ import types.TypeList;
 import bytecode.Bytecode;
 import bytecode.GETSTATIC;
 import bytecode.NEWSTRING;
-import bytecode.PUTFIELD;
 import bytecode.PUTSTATIC;
 import bytecode.VIRTUALCALL;
 
@@ -73,7 +72,7 @@ public class Assert extends Command {
 
 		if (!(checker.isAssertAllowed()))
 			error("Assert not allowed here");
-
+		
 		if (condition == null)
 			error("Assert: boolean expression expected");
 		else {
@@ -95,7 +94,7 @@ public class Assert extends Command {
 	 */
 	@Override
 	public boolean checkForDeadcode() {
-		return true;
+		return false;
 	}
 
 	/**
@@ -110,39 +109,26 @@ public class Assert extends Command {
 
 	@Override
 	public Block translate(CodeSignature where, Block continuation) {
-
-		// Bytecode falso = new NEWSTRING("assert fallito @" + where.getDefiningClass() + ".kit: " + where.getName() + " " + getPos() + "\n");// TODO
-		// Bytecode falso = new NEWSTRING(", " + position);
-
-		FieldSignature posAsserts = new FieldSignature(ClassType.mk(where.getDefiningClass() + "Test"), ClassType.mk("String"), "posAsserts", new FieldDeclaration(0,
-				new ClassTypeExpression(0, "String"), "posAsserts", null));
-
-		// Traduzione String.kit per usare output in VIRTUALCALL
-		// ClassType clazz = ClassType.mkFromFileName("String.kit");
-		// Program program = clazz.translate();
-		/*
-		 * ldc "a" // aload posAsserts ldc "b" // ldc "falso" invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String; ...
-		 */
-		// Bytecode getfield = new GETFIELD(posAsserts); // dovrebbe essere un getstatic
-		Bytecode getfield = new GETSTATIC(posAsserts);
-		Bytecode newstring = new NEWSTRING(", " + position);
-
 		ClassType stringClass = ClassType.mk("String");
 
+		// realizzo una falsa field signature per il campo statico che usero nella CTest
+		FieldSignature posAsserts = new FieldSignature(ClassType.mk(where.getDefiningClass() + "Test"), stringClass, "posAsserts", new FieldDeclaration(0,
+				new ClassTypeExpression(0, "String"), "posAsserts", null));
+
+		// i vari bytecode da porre davanti alla continuation nel caso di fallimento
+		Bytecode getfield = new GETSTATIC(posAsserts);
+		Bytecode newstring = new NEWSTRING(", " + position);
 		Bytecode concat = new VIRTUALCALL(stringClass, stringClass.methodLookup("concat", TypeList.EMPTY.push(stringClass)));
 		Bytecode putfield = new PUTSTATIC(posAsserts);
-		// Bytecode print = new PUTFIELD(new FieldDeclaration(0, new ClassTypeExpression(0, "String"), "posAsserts", null).getSignature());
-		// Bytecode print = new VIRTUALCALL(clazz , clazz.methodLookup("output", TypeList.EMPTY));
-
-		// program.dumpCodeDot();
 
 		// if there is an initialising expression, we translate it
 		if (condition != null) {
 			// indico di non unire il bytecode nei prefixedBy
 			continuation.doNotMerge();
-
-			continuation = condition.translateAsTest(where, continuation, /* continuation.prefixedBy(falso) */
+			
+			continuation = condition.translateAsTest(where, continuation,
 					continuation.prefixedBy(putfield).prefixedBy(concat).prefixedBy(newstring).prefixedBy(getfield));
+			
 		}
 		return continuation;
 	}

@@ -99,8 +99,10 @@ public class Program {
 		
 		Collection<TestSignature> tests = start.getDefiningClass().testLookup();
 		if(!tests.isEmpty()) {
-			for(TestSignature t : tests)
+			for(TestSignature t : tests) {
 				t.getCode().cleanUp(this);
+				sigs.add(t);
+			}
 			
 			start.getDefiningClass().constructorLookup(TypeList.EMPTY).getCode().cleanUp(this);
 			sigs.add(start.getDefiningClass().constructorLookup(TypeList.EMPTY));
@@ -108,8 +110,10 @@ public class Program {
 		
 		Set<FixtureSignature> fixtures = start.getDefiningClass().fixtureLookup();
 		if(!fixtures.isEmpty())
-			for(FixtureSignature f : fixtures)
+			for(FixtureSignature f : fixtures) {
 				f.getCode().cleanUp(this);
+				sigs.add(f);
+			}
 
 	}
 

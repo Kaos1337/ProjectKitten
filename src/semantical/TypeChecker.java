@@ -40,6 +40,7 @@ public class TypeChecker {
 
 	
 	private final boolean allowsAssert;
+
 	
 	/**
 	 * Constructs a type-checker.
@@ -173,5 +174,7 @@ public class TypeChecker {
 	public String errorPosition(int pos){
 		return errorMsg.getPosition(pos);
 	}
+
+
 	
 }

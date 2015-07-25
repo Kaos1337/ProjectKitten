@@ -83,9 +83,7 @@ public class TestDeclaration extends CodeDeclaration {
 		
 		getBody().typeCheck(checker);
 
-		/* Secondo me non serve - Davide
-		 * if (! getBody().checkForDeadcode())
-			error(checker, "deadcode");*/
+		getBody().checkForDeadcode();
 
 	}
 }
