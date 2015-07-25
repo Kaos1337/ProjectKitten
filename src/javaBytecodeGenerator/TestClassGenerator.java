@@ -9,8 +9,6 @@ import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 
-import com.sun.org.apache.bcel.internal.classfile.Field;
-
 import types.ClassMemberSignature;
 import types.ClassType;
 import types.FixtureSignature;
@@ -91,11 +89,9 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 	private InstructionList getMainCode(ClassType clazztest, Set<ClassMemberSignature> sigs) {
 		InstructionList il = new InstructionList();
-		// getStaticTarget()).createINVOKEVIRTUAL(classGen));
 
-		System.out.println("Generata TestClass per " + clazztest.toBCEL().toString());
 		// inizio ciclo dei test
-		il.append(getFactory().createPrintln("Esecuzione dei test per classe "+ this.getClassName()+":"));
+		il.append(getFactory().createPrintln("Esecuzione dei test per classe " + this.getClassName() + ":"));
 		for (TestSignature t : clazztest.testLookup())
 			if (sigs == null || sigs.contains(t)) {
 
@@ -110,7 +106,6 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 				il.append(clazztest.constructorLookup(TypeList.EMPTY).createINVOKESPECIAL(this));
 
-				// il.append(getFactory().createInvoke(clazztest.getName(), Constants.CONSTRUCTOR_NAME, Type.VOID, Type.NO_ARGS, Constants.INVOKESPECIAL));
 				// ciclo per i metodi delle fixture da eseguire sulla classe di test
 				for (FixtureSignature f : clazztest.fixtureLookup()) {
 					if (sigs == null || sigs.contains(f)) {
@@ -126,11 +121,6 @@ public class TestClassGenerator extends GeneralClassGenerator {
 					}
 				}
 
-				// il.append(InstructionFactory.DUP);
-				// il.append(getFactory().createConstant(""));
-
-				// il.append(InstructionFactory.SWAP);
-
 				il.append(this.getFactory().createInvoke(clazztest.getName() + "Test", // name of the class
 						t.getName(), // name of the method
 						org.apache.bcel.generic.Type.VOID, // return type
@@ -140,64 +130,82 @@ public class TestClassGenerator extends GeneralClassGenerator {
 				il.append(createReport(t.getName()));
 			}
 		il.append(InstructionFactory.RETURN);
-		
+
 		return il;
 
 	}
-	
-	private InstructionList pushTime(){
-	 	InstructionList il = new InstructionList();
-	 	
-		// metto sullo stack i millisecondi attuali
-		il.append(getFactory().createInvoke
-							("java/lang/System", // name of the class
-							"nanoTime", // name of the method or constructor
-							org.apache.bcel.generic.Type.LONG, // return type
-							org.apache.bcel.generic.Type.NO_ARGS,
-							Constants.INVOKESTATIC));
-		return il;
-	 }
 
-	/**
-	 * Ottiene il tempo passato a seguito dell'invocazione del test
-	 * Assume di trovare sullo stack due valori di tempo in nanosecondi
-	 * e lascia una stringa che rappresenta un tempo in millisecondi 
-	 * e decimali passato tra i due 
-	 * <br>..., time(long)_old, time(long)_recent; ..., difference(string?)<br>
-	 * @return
-	 */
-	private InstructionList printTime(){
+	private InstructionList pushTime() {
 		InstructionList il = new InstructionList();
-		
-		//credo sia meglio fare un secondo pushTime prima ancora di chiamare print time
-		//cosìcchè ci sia la minor dispersione possibile di tempo
-		/*il.append(getFactory().createInvoke
-				("java/lang/System", // name of the class
+
+		il.append(getFactory().createInvoke("java/lang/System", // name of the class
 				"nanoTime", // name of the method or constructor
 				org.apache.bcel.generic.Type.LONG, // return type
-				org.apache.bcel.generic.Type.NO_ARGS,
-				Constants.INVOKESTATIC));*/
+				org.apache.bcel.generic.Type.NO_ARGS, Constants.INVOKESTATIC));
 
-		// i millisecondi iniziali ce li ho sullo stack, faccio uno swap
-		il.append(InstructionFactory.SWAP);
+		return il;
+	}
+
+	private InstructionList getTimeString() {
+		InstructionList il = new InstructionList();
+		InstructionList fine = new InstructionList();
+		InstructionList aggiunta = new InstructionList();
+		Type stringType = Type.getType(runTime.String.class);
+
 		/*
-		long msint = (a-b)/1000000;
-		long msdec = (msint*100) - ((a-b)/10000);
-		 * */
-		/*
-		 * lsub
-		 * dup
-		 * push 1000000
-		 * ldiv
-		 * */
-		il.append(InstructionFactory.LSUB);
-		il.append(InstructionFactory.DUP); // mi serve per il calcolo di msdec
+		 * a = timestamp iniziale b = timestamp attuale int x =(int) ((int) b-a); int msint = x/1000000; int msdec = (x/10000) - (msint*100); lsub l2i dup push 1000000 idiv swap push 10000 idiv swap dup push 100 imul isub
+		 */
+
+		// metto sullo stack i millisecondi attuali
+		il.append(pushTime());
+		il.append(InstructionFactory.DUP2_X2);
+		il.append(InstructionFactory.POP2);
+		il.append(InstructionFactory.LSUB); // calcolo x
+		il.append(InstructionFactory.L2I); // tronca le cifre piu' significative
+
+		il.append(InstructionFactory.DUP); // mi serve dopo per il calcolo di msdec
 		il.append(getFactory().createConstant(1000000));
-		il.append(InstructionFactory.LDIV);
+		il.append(InstructionFactory.IDIV); // calcolo msint
 		// ora mi trovo msint sullo stack
-		
-		
-		
+
+		// calcolo parte sinistra della sottrazione di msdec
+		il.append(InstructionFactory.SWAP);// recupero x
+		il.append(getFactory().createConstant(10000));
+		il.append(InstructionFactory.IDIV);
+
+		// calcolo la parte destra
+		il.append(InstructionFactory.SWAP);
+		il.append(InstructionFactory.DUP);
+		il.append(getFactory().createConstant(100));
+		il.append(InstructionFactory.IMUL);
+
+		// sottrazione finale
+		il.append(InstructionFactory.ISUB);
+
+		// ora genero la stringa
+		il.append(new NEWSTRING(" [").generateJavaBytecode(this));
+		il.append(InstructionFactory.SWAP);
+		il.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", stringType, new Type[] { Type.INT }, Constants.INVOKEVIRTUAL));
+		il.append(new NEWSTRING(".").generateJavaBytecode(this));
+		il.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", stringType, new Type[] { stringType }, Constants.INVOKEVIRTUAL));
+		il.append(InstructionFactory.SWAP); // porto sopra l'intero decimale
+
+		// TODO aggiungo uno 0 davanti se msdec < 10
+		/*
+		 * il.append(InstructionFactory.DUP); il.append(getFactory().createConstant(10)); aggiunta.append(new NEWSTRING("0").generateJavaBytecode(this)); aggiunta.append(InstructionFactory.SWAP);
+		 * aggiunta.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", stringType, new Type[] { stringType }, Constants.INVOKEVIRTUAL)); aggiunta.append(InstructionFactory.SWAP);
+		 * 
+		 * fine.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", stringType, new Type[] { Type.INT }, Constants.INVOKEVIRTUAL)); fine.append(new NEWSTRING("ms]").generateJavaBytecode(this));
+		 * fine.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", stringType, new Type[] { stringType }, Constants.INVOKEVIRTUAL));
+		 * 
+		 * aggiunta.append(fine); il.append((new IF_CMPLT(IntType.INSTANCE).generateJavaBytecode(this, aggiunta.getStart(), fine.getStart())));
+		 */
+
+		// TODO righe di esempio da eliminare
+		il.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", stringType, new Type[] { Type.INT }, Constants.INVOKEVIRTUAL));
+		il.append(new NEWSTRING("ms]").generateJavaBytecode(this));
+		il.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", stringType, new Type[] { stringType }, Constants.INVOKEVIRTUAL));
+
 		return il;
 	}
 
@@ -206,7 +214,9 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		InstructionList ramoVero = new InstructionList();
 		InstructionList ramoFalso = new InstructionList();
 		InstructionList fine = new InstructionList();
+		Type stringType = Type.getType(runTime.String.class);
 
+		il.append(pushTime());
 		il.append(getFactory().createGetStatic(this.getClassName(), "posAsserts", Type.getType(runTime.String.class)));
 		il.append(new NEWSTRING("").generateJavaBytecode(this));
 		il.append(getFactory().createInvoke(runTime.String.class.getName(), "equals", Type.BOOLEAN, new Type[] { Type.getType(runTime.String.class) }, Constants.INVOKEVIRTUAL));
@@ -215,14 +225,22 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		 * IF TRUE goto vero -carico test fallito con posizioni goto fine vero: -carico test successo fine: -stampa return
 		 */
 		// stampa
+		fine.append(getFactory().createConstant(0));
+		fine.append(InstructionFactory.DUP2_X2);
+		fine.append(InstructionFactory.POP2);
+		fine.append(getTimeString());
+		fine.append(InstructionFactory.SWAP);
+		fine.append(InstructionFactory.POP);
+		fine.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", stringType, new Type[] { stringType }, Constants.INVOKEVIRTUAL));
 		fine.append(getFactory().createInvoke(runTime.String.class.getName(), "output", Type.VOID, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
 
 		// se e' falso carichiamo la stringa "test fallito [posAsserts]"
 		ramoFalso.append(new NEWSTRING("\n- test " + nometest + ": fallito").generateJavaBytecode(this));
 
-		//ramoFalso.append(getFactory().createConstant("\n- test " + nometest + ": fallito"));
+		// ramoFalso.append(getFactory().createConstant("\n- test " + nometest + ": fallito"));
 		ramoFalso.append(getFactory().createGetStatic(this.getClassName(), "posAsserts", Type.getType(runTime.String.class)));
-		ramoFalso.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", Type.getType(runTime.String.class), new Type[] { Type.getType(runTime.String.class) }, Constants.INVOKEVIRTUAL));
+		ramoFalso.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", Type.getType(runTime.String.class), new Type[] { Type.getType(runTime.String.class) },
+				Constants.INVOKEVIRTUAL));
 		ramoFalso.append(new org.apache.bcel.generic.GOTO(fine.getStart()));
 
 		// se e' vero carichiamo la stringa "test superato"
@@ -235,7 +253,6 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		il.append(ramoFalso);
 		il.append(ramoVero);
 		il.append(fine);
-
 		return il;
 	}
 
