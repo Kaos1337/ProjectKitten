@@ -10,9 +10,9 @@ import types.FieldSignature;
  * A bytecode that writes a value into a given field of an object,
  * called <i>receiver</i>. If the receiver is {@code nil}, the computation stops.
  * <br><br>
- * ..., receiver object, value -&gt; ...
+ * ..., value -&gt; ...
  *
- * @author <A HREF="mailto:fausto.spoto@univr.it">Fausto Spoto</A>
+ * @author Comencini Marco, Marretta Francesco, Zuliani Davide
  */
 
 public class PUTSTATIC extends FieldAccessBytecode {
@@ -53,7 +53,7 @@ public class PUTSTATIC extends FieldAccessBytecode {
 	 * Generates the Java bytecode corresponding to this Kitten bytecode.
 	 *
 	 * @param classGen the Java class generator to be used for this generation
-	 * @return the Java {@code putfield field} bytecode
+	 * @return the Java {@code putstatic class.field} bytecode
 	 */
 
 	@Override

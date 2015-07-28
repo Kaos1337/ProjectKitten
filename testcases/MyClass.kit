@@ -4,42 +4,37 @@ class MyClass{
   field String b
   
   constructor() {
-   /* this.a:=0;
-    this.b:= "aa\n"*/
+   this.a:=0;
+   this.b:= "aa\n"
   }
 
- /* fixture {
+ fixture {
    this.a := 10
   }
   
   fixture {
-   this.b := "lol";
    this.b := "lol"
   }
-  */
+  
   
   test uno {
     assert(1<50)
   }
   
   test due {
-    assert(1>50)
+    assert(1>50);
+    assert(this.b.equals("LOL"))
   }
-/*
+
   test ata {
-    assert(this.a>50);
- 
-    this.b.output();
-    
+    assert(this.a>50);    
     if( this.a < 9 ) then {
-    	"impossibile".output();
     	assert(1<0)
     } else { 
-    	"ok\n".output();
     	assert(0<this.a)
     }
-  }*/
-  /*
+  }
+  
   test testdifrancesco {
   	int c := 0;
     for(this.a := 0; this.a <= 11; this.a := this.a + 1){
@@ -48,14 +43,19 @@ class MyClass{
     assert(c<this.a)
   }
   
-  test thisismyswamp {
-  	assert (this.a = 10  )
-  }*/
+  test somma {
+  	 MyCalculator calc := new MyCalculator();
+  	 int res := calc.add(this.a, 10);
+  	 assert(res=20)
+  }
   
   method void main(){
-    "ciao".output()   
+    MyClass m := new MyClass();
+    MyCalculator c := new MyCalculator();
+    String res := "The result is: ";
+    m.a := c.add(m.a, 10); 
+    res := res.concat(m.a);
+    res.output()   
     }
     
-
-  
 }

@@ -20,7 +20,7 @@ import bytecode.NEWSTRING;
 /**
  * A Java bytecode generator. It transforms the Kitten intermediate language into Java bytecode that can be dumped to Java class files and run. It uses the BCEL library to represent Java classes and dump them on the file-system.
  *
- * @author <A HREF="mailto:fausto.spoto@univr.it">Fausto Spoto</A>
+ * @author Comencini Marco, Marretta Francesco, Zuliani Davide
  */
 
 @SuppressWarnings("serial")
@@ -32,7 +32,7 @@ public class TestClassGenerator extends GeneralClassGenerator {
 	 * @param clazz
 	 *            the class type
 	 * @param sigs
-	 *            a set of class member signatures. These are those that must be translated. If this is {@code null}, all class members are translated
+	 *            a set of class member signatures. 
 	 */
 
 	public TestClassGenerator(ClassType clazz, Set<ClassMemberSignature> sigs) {
@@ -57,7 +57,11 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		createMain(clazz, sigs);
 	}
 
+	/**
+	 * Create the fields used in the class
+	 */
 	private void createFields() {
+		// The field that keep track of failed asserts
 		FieldGen posAsserts;
 
 		posAsserts = new FieldGen(Constants.ACC_PRIVATE | Constants.ACC_STATIC, Type.getType(runTime.String.class), "posAsserts", this.getConstantPool()); // constant pool
@@ -66,6 +70,13 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 	}
 
+	/**
+	 * Create the Main method of the class
+	 * @param clazztest 
+	 * 					the class type being tested
+	 * @param sigs
+	 * 				a set of class member signatures
+	 */
 	private void createMain(ClassType clazztest, Set<ClassMemberSignature> sigs) {
 		MethodGen mainGen;
 
@@ -87,11 +98,20 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		this.addMethod(mainGen.getMethod());
 	}
 
+	/**
+	 * Constructs the code of the main method, that instantiate the class being tested,
+	 * call all the fixtures (in arbitrary order) and one test; this is repeated for every test 
+	 * @param clazztest 
+	 * 					the class type being tested
+	 * @param sigs
+	 * 				a set of class member signatures
+	 * @return the InstructionList of the Main code
+	 */
 	private InstructionList getMainCode(ClassType clazztest, Set<ClassMemberSignature> sigs) {
 		InstructionList il = new InstructionList();
 
 		// inizio ciclo dei test
-		il.append(getFactory().createPrintln("Esecuzione dei test per classe " + this.getClassName() + ":"));
+		il.append(getFactory().createPrintln("Esecuzione dei test per classe " + clazztest + ":"));
 		for (TestSignature t : clazztest.testLookup())
 			if (sigs == null || sigs.contains(t)) {
 
@@ -145,6 +165,12 @@ public class TestClassGenerator extends GeneralClassGenerator {
 
 	}
 
+	/**
+	 * Carica sullo stack il tempo attuale in nanosecondi
+	 * <br>
+	 * ..., ... -&gt; ...,time(long)<br>
+	 * @return InstructionList corrispondente
+	 */
 	private InstructionList pushTime() {
 		InstructionList il = new InstructionList();
 
@@ -162,9 +188,9 @@ public class TestClassGenerator extends GeneralClassGenerator {
 	 * e lascia una stringa che rappresenta un tempo in millisecondi 
 	 * e decimali passato tra i due 
 	 * <br>
-	 * ..., time(long)_old, time(long)_recent; ..., difference(string?)<br>
+	 * ..., time(long)_old, time(long)_recent -&gt; ..., difference(runTime.String)<br>
 	 * 
-	 * @return
+	 * @return InstructionList corrispondente
 	 */
 	private InstructionList getTimeString() {
 		InstructionList il = new InstructionList();
@@ -198,14 +224,14 @@ public class TestClassGenerator extends GeneralClassGenerator {
 	}
 
 	/**
-	 * Crea un Report a seguito dell'invocazione del test
-	 * sfruttando tempi e campo posAssert che contiene info su assert
+	 * Stampa un Report a seguito dell'invocazione del test
+	 * sfruttando tempi e campo posAssert che contiene info su assert falliti
 	 * Assume di trovare sullo stack due valori di tempo in nanosecondi
 	 *  
 	 * <br>
-	 * ..., time(long)_old, time(long)_recent; ...,<br>
+	 * ..., time(long)_old, time(long)_recent -&gt; ..., ...<br>
 	 * 
-	 * @return
+	 * @return InstructionList corrispondente
 	 */
 	private InstructionList createReport(String nometest) {
 		InstructionList il = new InstructionList();
@@ -221,22 +247,21 @@ public class TestClassGenerator extends GeneralClassGenerator {
 		il.append(getFactory().createInvoke(runTime.String.class.getName(), "equals", Type.BOOLEAN, new Type[] { Type.getType(runTime.String.class) }, Constants.INVOKEVIRTUAL));
 
 		/*
-		 * IF TRUE goto vero -carico test fallito con posizioni goto fine vero: -carico test successo fine: -stampa return
+		 * IF TRUE goto vero 
+		 * -carico test fallito con posizioni 
+		 * goto fine 
+		 * vero: -carico test successo 
+		 * fine: -stampa 
+		 * return
 		 */
 		// stampa
-		/*fine.append(getFactory().createConstant(0));
-		fine.append(InstructionFactory.DUP2_X2);
-		fine.append(InstructionFactory.POP2);
-		fine.append(pushTime());
-		fine.append(getTimeString());*/
+		
 		fine.append(InstructionFactory.SWAP);
 		fine.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", stringType, new Type[] { stringType }, Constants.INVOKEVIRTUAL));
 		fine.append(getFactory().createInvoke(runTime.String.class.getName(), "output", Type.VOID, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
 
 		// se e' falso carichiamo la stringa "test fallito [posAsserts]"
 		ramoFalso.append(new NEWSTRING("\n- test " + nometest + ": fallito").generateJavaBytecode(this));
-
-		// ramoFalso.append(getFactory().createConstant("\n- test " + nometest + ": fallito"));
 		ramoFalso.append(getFactory().createGetStatic(this.getClassName(), "posAsserts", Type.getType(runTime.String.class)));
 		ramoFalso.append(getFactory().createInvoke(runTime.String.class.getName(), "concat", Type.getType(runTime.String.class), new Type[] { Type.getType(runTime.String.class) },
 				Constants.INVOKEVIRTUAL));

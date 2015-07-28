@@ -112,6 +112,9 @@ public class Assert extends Command {
 		ClassType stringClass = ClassType.mk("String");
 
 		// realizzo una falsa field signature per il campo statico che usero nella CTest
+		// Ciò causa la stampa di un warning dovuto al 
+		// ClassType.mk(where.getDefiningClass() + "Test")
+		// poichè tale classe non è presente
 		FieldSignature posAsserts = new FieldSignature(ClassType.mk(where.getDefiningClass() + "Test"), stringClass, "posAsserts", new FieldDeclaration(0,
 				new ClassTypeExpression(0, "String"), "posAsserts", null));
 

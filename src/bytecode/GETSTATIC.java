@@ -10,9 +10,9 @@ import types.FieldSignature;
  * A bytecode that reads the value of a given field of an object,
  * called <i>receiver</i>. If the receiver is {@code nil}, the computation stops.
  * <br><br>
- * ..., receiver object -&gt; ..., value
+ * ..., ... -&gt; ..., value
  *
- * @author <A HREF="mailto:fausto.spoto@univr.it">Fausto Spoto</A>
+ * @author Comencini Marco, Marretta Francesco, Zuliani Davide
  */
 
 public class GETSTATIC extends FieldAccessBytecode {
@@ -53,7 +53,7 @@ public class GETSTATIC extends FieldAccessBytecode {
 	 * Generates the Java bytecode corresponding to this Kitten bytecode.
 	 *
 	 * @param classGen the Java class generator to be used for this generation
-	 * @return the Java {@code getfield field} bytecode
+	 * @return the Java {@code getstatic field} bytecode
 	 */
 
 	@Override
