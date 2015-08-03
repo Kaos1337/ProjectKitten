@@ -1,297 +1,469 @@
 digraph MyClass {
 size = "11,7.5";
 rotate = 90
-node107 [ label = "ClassDefinition"];
+node160 [ label = "ClassDefinition"];
 symbol_MyClass [label = "MyClass" fontname = "Times-Italic" shape = box]
-node107 -> symbol_MyClass [label = "name" fontsize = 8]
+node160 -> symbol_MyClass [label = "name" fontsize = 8]
 symbol_Object [label = "Object" fontname = "Times-Italic" shape = box]
-node107 -> symbol_Object [label = "superclassName" fontsize = 8]
-node106 [ label = "FieldDeclaration"];
-node0 [ label = "IntTypeExpression"];
-node106 -> node0 [label = "type" fontsize = 8]
+node160 -> symbol_Object [label = "superclassName" fontsize = 8]
+node159 [ label = "FieldDeclaration"];
+node0 [ label = "IntTypeExpression [int]"];
+node159 -> node0 [label = "type" fontsize = 8]
 symbol_a [label = "a" fontname = "Times-Italic" shape = box]
-node106 -> symbol_a [label = "name" fontsize = 8]
-node105 [ label = "FieldDeclaration"];
-node1 [ label = "ClassTypeExpression"];
+node159 -> symbol_a [label = "name" fontsize = 8]
+node158 [ label = "FieldDeclaration"];
+node1 [ label = "ClassTypeExpression [String]"];
 symbol_String [label = "String" fontname = "Times-Italic" shape = box]
 node1 -> symbol_String [label = "name" fontsize = 8]
-node105 -> node1 [label = "type" fontsize = 8]
+node158 -> node1 [label = "type" fontsize = 8]
 symbol_b [label = "b" fontname = "Times-Italic" shape = box]
-node105 -> symbol_b [label = "name" fontsize = 8]
-node104 [ label = "ConstructorDeclaration"];
+node158 -> symbol_b [label = "name" fontsize = 8]
+node157 [ label = "ConstructorDeclaration"];
 node11 [ label = "LocalScope"];
 node10 [ label = "CommandSeq"];
 node5 [ label = "Assignment"];
-node3 [ label = "FieldAccess"];
-node2 [ label = "Variable"];
+node3 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node2 [ label = "Variable [MyClass]"];
 symbol_this [label = "this" fontname = "Times-Italic" shape = box]
 node2 -> symbol_this [label = "name" fontsize = 8]
 node3 -> node2 [label = "receiver" fontsize = 8]
 symbol_a [label = "a" fontname = "Times-Italic" shape = box]
 node3 -> symbol_a [label = "name" fontsize = 8]
 node5 -> node3 [label = "lvalue" fontsize = 8]
-node4 [ label = "IntLiteral: 0"];
+node4 [ label = "IntLiteral [int]: 0"];
 node5 -> node4 [label = "rvalue" fontsize = 8]
 node10 -> node5 [label = "first" fontsize = 8]
 node9 [ label = "Assignment"];
-node7 [ label = "FieldAccess"];
-node6 [ label = "Variable"];
+node7 [ label = "FieldAccess [String]\nreferences MyClass.b:String"];
+node6 [ label = "Variable [MyClass]"];
 symbol_this [label = "this" fontname = "Times-Italic" shape = box]
 node6 -> symbol_this [label = "name" fontsize = 8]
 node7 -> node6 [label = "receiver" fontsize = 8]
 symbol_b [label = "b" fontname = "Times-Italic" shape = box]
 node7 -> symbol_b [label = "name" fontsize = 8]
 node9 -> node7 [label = "lvalue" fontsize = 8]
-node8 [ label = "StringLiteral: aa\\n"];
+node8 [ label = "StringLiteral [String]: aa\\n"];
 node9 -> node8 [label = "rvalue" fontsize = 8]
 node10 -> node9 [label = "second" fontsize = 8]
 node11 -> node10 [label = "body" fontsize = 8]
-node104 -> node11 [label = "body" fontsize = 8]
-node103 [ label = "FixtureDeclaration"];
+node157 -> node11 [label = "body" fontsize = 8]
+node156 [ label = "FixtureDeclaration"];
 node16 [ label = "LocalScope"];
 node15 [ label = "Assignment"];
-node13 [ label = "FieldAccess"];
-node12 [ label = "Variable"];
+node13 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node12 [ label = "Variable [MyClass]"];
 symbol_this [label = "this" fontname = "Times-Italic" shape = box]
 node12 -> symbol_this [label = "name" fontsize = 8]
 node13 -> node12 [label = "receiver" fontsize = 8]
 symbol_a [label = "a" fontname = "Times-Italic" shape = box]
 node13 -> symbol_a [label = "name" fontsize = 8]
 node15 -> node13 [label = "lvalue" fontsize = 8]
-node14 [ label = "IntLiteral: 10"];
+node14 [ label = "IntLiteral [int]: 10"];
 node15 -> node14 [label = "rvalue" fontsize = 8]
 node16 -> node15 [label = "body" fontsize = 8]
-node103 -> node16 [label = "body" fontsize = 8]
-node102 [ label = "FixtureDeclaration"];
-node23 [ label = "LocalScope"];
-node22 [ label = "CommandSeq"];
+node156 -> node16 [label = "body" fontsize = 8]
+node155 [ label = "FixtureDeclaration"];
+node21 [ label = "LocalScope"];
 node20 [ label = "Assignment"];
-node18 [ label = "FieldAccess"];
-node17 [ label = "Variable"];
+node18 [ label = "FieldAccess [String]\nreferences MyClass.b:String"];
+node17 [ label = "Variable [MyClass]"];
 symbol_this [label = "this" fontname = "Times-Italic" shape = box]
 node17 -> symbol_this [label = "name" fontsize = 8]
 node18 -> node17 [label = "receiver" fontsize = 8]
 symbol_b [label = "b" fontname = "Times-Italic" shape = box]
 node18 -> symbol_b [label = "name" fontsize = 8]
 node20 -> node18 [label = "lvalue" fontsize = 8]
-node19 [ label = "StringLiteral: lol"];
+node19 [ label = "StringLiteral [String]: lol"];
 node20 -> node19 [label = "rvalue" fontsize = 8]
-node22 -> node20 [label = "first" fontsize = 8]
-node21 [ label = "Return"];
-node22 -> node21 [label = "second" fontsize = 8]
-node23 -> node22 [label = "body" fontsize = 8]
-node102 -> node23 [label = "body" fontsize = 8]
-node101 [ label = "TestDeclaration"];
+node21 -> node20 [label = "body" fontsize = 8]
+node155 -> node21 [label = "body" fontsize = 8]
+node154 [ label = "TestDeclaration"];
 symbol_uno [label = "uno" fontname = "Times-Italic" shape = box]
-node101 -> symbol_uno [label = "name" fontsize = 8]
-node28 [ label = "LocalScope"];
-node27 [ label = "Assert"];
-node26 [ label = "LessThan"];
-node24 [ label = "IntLiteral: 1"];
-node26 -> node24 [label = "left" fontsize = 8]
-node25 [ label = "IntLiteral: 50"];
-node26 -> node25 [label = "right" fontsize = 8]
-node27 -> node26 [label = "condition" fontsize = 8]
-node28 -> node27 [label = "body" fontsize = 8]
-node101 -> node28 [label = "body" fontsize = 8]
-node100 [ label = "TestDeclaration"];
+node154 -> symbol_uno [label = "name" fontsize = 8]
+node26 [ label = "LocalScope"];
+node25 [ label = "Assert"];
+node24 [ label = "LessThan [boolean]"];
+node22 [ label = "IntLiteral [int]: 1"];
+node24 -> node22 [label = "left" fontsize = 8]
+node23 [ label = "IntLiteral [int]: 50"];
+node24 -> node23 [label = "right" fontsize = 8]
+node25 -> node24 [label = "condition" fontsize = 8]
+node26 -> node25 [label = "body" fontsize = 8]
+node154 -> node26 [label = "body" fontsize = 8]
+node153 [ label = "TestDeclaration"];
 symbol_due [label = "due" fontname = "Times-Italic" shape = box]
-node100 -> symbol_due [label = "name" fontsize = 8]
-node33 [ label = "LocalScope"];
-node32 [ label = "Assert"];
-node31 [ label = "GreaterThan"];
-node29 [ label = "IntLiteral: 1"];
-node31 -> node29 [label = "left" fontsize = 8]
-node30 [ label = "IntLiteral: 50"];
-node31 -> node30 [label = "right" fontsize = 8]
-node32 -> node31 [label = "condition" fontsize = 8]
-node33 -> node32 [label = "body" fontsize = 8]
-node100 -> node33 [label = "body" fontsize = 8]
-node99 [ label = "TestDeclaration"];
-symbol_ata [label = "ata" fontname = "Times-Italic" shape = box]
-node99 -> symbol_ata [label = "name" fontsize = 8]
-node66 [ label = "LocalScope"];
-node65 [ label = "CommandSeq"];
-node38 [ label = "Assert"];
-node37 [ label = "GreaterThan"];
-node35 [ label = "FieldAccess"];
-node34 [ label = "Variable"];
+node153 -> symbol_due [label = "name" fontsize = 8]
+node38 [ label = "LocalScope"];
+node37 [ label = "CommandSeq"];
+node30 [ label = "Assert"];
+node29 [ label = "GreaterThan [boolean]"];
+node27 [ label = "IntLiteral [int]: 1"];
+node29 -> node27 [label = "left" fontsize = 8]
+node28 [ label = "IntLiteral [int]: 50"];
+node29 -> node28 [label = "right" fontsize = 8]
+node30 -> node29 [label = "condition" fontsize = 8]
+node37 -> node30 [label = "first" fontsize = 8]
+node36 [ label = "Assert"];
+node35 [ label = "MethodCallExpression [boolean]\nreferences String.equals(String):boolean"];
+node32 [ label = "FieldAccess [String]\nreferences MyClass.b:String"];
+node31 [ label = "Variable [MyClass]"];
 symbol_this [label = "this" fontname = "Times-Italic" shape = box]
-node34 -> symbol_this [label = "name" fontsize = 8]
-node35 -> node34 [label = "receiver" fontsize = 8]
-symbol_a [label = "a" fontname = "Times-Italic" shape = box]
-node35 -> symbol_a [label = "name" fontsize = 8]
-node37 -> node35 [label = "left" fontsize = 8]
-node36 [ label = "IntLiteral: 50"];
-node37 -> node36 [label = "right" fontsize = 8]
-node38 -> node37 [label = "condition" fontsize = 8]
-node65 -> node38 [label = "first" fontsize = 8]
-node64 [ label = "CommandSeq"];
-node41 [ label = "MethodCallCommand"];
-node40 [ label = "FieldAccess"];
-node39 [ label = "Variable"];
+node31 -> symbol_this [label = "name" fontsize = 8]
+node32 -> node31 [label = "receiver" fontsize = 8]
+symbol_b [label = "b" fontname = "Times-Italic" shape = box]
+node32 -> symbol_b [label = "name" fontsize = 8]
+node35 -> node32 [label = "receiver" fontsize = 8]
+symbol_equals [label = "equals" fontname = "Times-Italic" shape = box]
+node35 -> symbol_equals [label = "name" fontsize = 8]
+node34 [ label = "ExpressionSeq"];
+node33 [ label = "StringLiteral [String]: LOL"];
+node34 -> node33 [label = "head" fontsize = 8]
+node35 -> node34 [label = "actuals" fontsize = 8]
+node36 -> node35 [label = "condition" fontsize = 8]
+node37 -> node36 [label = "second" fontsize = 8]
+node38 -> node37 [label = "body" fontsize = 8]
+node153 -> node38 [label = "body" fontsize = 8]
+node152 [ label = "TestDeclaration"];
+symbol_ata [label = "ata" fontname = "Times-Italic" shape = box]
+node152 -> symbol_ata [label = "name" fontsize = 8]
+node61 [ label = "LocalScope"];
+node60 [ label = "CommandSeq"];
+node43 [ label = "Assert"];
+node42 [ label = "GreaterThan [boolean]"];
+node40 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node39 [ label = "Variable [MyClass]"];
 symbol_this [label = "this" fontname = "Times-Italic" shape = box]
 node39 -> symbol_this [label = "name" fontsize = 8]
 node40 -> node39 [label = "receiver" fontsize = 8]
-symbol_b [label = "b" fontname = "Times-Italic" shape = box]
-node40 -> symbol_b [label = "name" fontsize = 8]
-node41 -> node40 [label = "receiver" fontsize = 8]
-symbol_output [label = "output" fontname = "Times-Italic" shape = box]
-node41 -> symbol_output [label = "name" fontsize = 8]
-node64 -> node41 [label = "first" fontsize = 8]
-node63 [ label = "IfThenElse"];
-node45 [ label = "LessThan"];
-node43 [ label = "FieldAccess"];
-node42 [ label = "Variable"];
-symbol_this [label = "this" fontname = "Times-Italic" shape = box]
-node42 -> symbol_this [label = "name" fontsize = 8]
-node43 -> node42 [label = "receiver" fontsize = 8]
 symbol_a [label = "a" fontname = "Times-Italic" shape = box]
-node43 -> symbol_a [label = "name" fontsize = 8]
-node45 -> node43 [label = "left" fontsize = 8]
-node44 [ label = "IntLiteral: 9"];
-node45 -> node44 [label = "right" fontsize = 8]
-node63 -> node45 [label = "condition" fontsize = 8]
-node53 [ label = "LocalScope"];
-node52 [ label = "CommandSeq"];
-node47 [ label = "MethodCallCommand"];
-node46 [ label = "StringLiteral: impossibile"];
-node47 -> node46 [label = "receiver" fontsize = 8]
-symbol_output [label = "output" fontname = "Times-Italic" shape = box]
-node47 -> symbol_output [label = "name" fontsize = 8]
-node52 -> node47 [label = "first" fontsize = 8]
+node40 -> symbol_a [label = "name" fontsize = 8]
+node42 -> node40 [label = "left" fontsize = 8]
+node41 [ label = "IntLiteral [int]: 50"];
+node42 -> node41 [label = "right" fontsize = 8]
+node43 -> node42 [label = "condition" fontsize = 8]
+node60 -> node43 [label = "first" fontsize = 8]
+node59 [ label = "IfThenElse"];
+node47 [ label = "LessThan [boolean]"];
+node45 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node44 [ label = "Variable [MyClass]"];
+symbol_this [label = "this" fontname = "Times-Italic" shape = box]
+node44 -> symbol_this [label = "name" fontsize = 8]
+node45 -> node44 [label = "receiver" fontsize = 8]
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node45 -> symbol_a [label = "name" fontsize = 8]
+node47 -> node45 [label = "left" fontsize = 8]
+node46 [ label = "IntLiteral [int]: 9"];
+node47 -> node46 [label = "right" fontsize = 8]
+node59 -> node47 [label = "condition" fontsize = 8]
+node52 [ label = "LocalScope"];
 node51 [ label = "Assert"];
-node50 [ label = "LessThan"];
-node48 [ label = "IntLiteral: 1"];
+node50 [ label = "LessThan [boolean]"];
+node48 [ label = "IntLiteral [int]: 1"];
 node50 -> node48 [label = "left" fontsize = 8]
-node49 [ label = "IntLiteral: 0"];
+node49 [ label = "IntLiteral [int]: 0"];
 node50 -> node49 [label = "right" fontsize = 8]
 node51 -> node50 [label = "condition" fontsize = 8]
-node52 -> node51 [label = "second" fontsize = 8]
-node53 -> node52 [label = "body" fontsize = 8]
-node63 -> node53 [label = "then" fontsize = 8]
-node62 [ label = "LocalScope"];
-node61 [ label = "CommandSeq"];
-node55 [ label = "MethodCallCommand"];
-node54 [ label = "StringLiteral: ok\\n"];
+node52 -> node51 [label = "body" fontsize = 8]
+node59 -> node52 [label = "then" fontsize = 8]
+node58 [ label = "LocalScope"];
+node57 [ label = "Assert"];
+node56 [ label = "LessThan [boolean]"];
+node53 [ label = "IntLiteral [int]: 0"];
+node56 -> node53 [label = "left" fontsize = 8]
+node55 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node54 [ label = "Variable [MyClass]"];
+symbol_this [label = "this" fontname = "Times-Italic" shape = box]
+node54 -> symbol_this [label = "name" fontsize = 8]
 node55 -> node54 [label = "receiver" fontsize = 8]
-symbol_output [label = "output" fontname = "Times-Italic" shape = box]
-node55 -> symbol_output [label = "name" fontsize = 8]
-node61 -> node55 [label = "first" fontsize = 8]
-node60 [ label = "Assert"];
-node59 [ label = "LessThan"];
-node56 [ label = "IntLiteral: 0"];
-node59 -> node56 [label = "left" fontsize = 8]
-node58 [ label = "FieldAccess"];
-node57 [ label = "Variable"];
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node55 -> symbol_a [label = "name" fontsize = 8]
+node56 -> node55 [label = "right" fontsize = 8]
+node57 -> node56 [label = "condition" fontsize = 8]
+node58 -> node57 [label = "body" fontsize = 8]
+node59 -> node58 [label = "_else" fontsize = 8]
+node60 -> node59 [label = "second" fontsize = 8]
+node61 -> node60 [label = "body" fontsize = 8]
+node152 -> node61 [label = "body" fontsize = 8]
+node151 [ label = "TestDeclaration"];
+symbol_testdifrancesco [label = "testdifrancesco" fontname = "Times-Italic" shape = box]
+node151 -> symbol_testdifrancesco [label = "name" fontsize = 8]
+node94 [ label = "LocalScope"];
+node93 [ label = "CommandSeq"];
+node64 [ label = "LocalDeclaration"];
+node62 [ label = "IntTypeExpression [int]"];
+node64 -> node62 [label = "type" fontsize = 8]
+symbol_c [label = "c" fontname = "Times-Italic" shape = box]
+node64 -> symbol_c [label = "name" fontsize = 8]
+node63 [ label = "IntLiteral [int]: 0"];
+node64 -> node63 [label = "initialiser" fontsize = 8]
+node93 -> node64 [label = "first" fontsize = 8]
+node92 [ label = "CommandSeq"];
+node86 [ label = "For"];
+node68 [ label = "Assignment"];
+node66 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node65 [ label = "Variable [MyClass]"];
 symbol_this [label = "this" fontname = "Times-Italic" shape = box]
-node57 -> symbol_this [label = "name" fontsize = 8]
-node58 -> node57 [label = "receiver" fontsize = 8]
+node65 -> symbol_this [label = "name" fontsize = 8]
+node66 -> node65 [label = "receiver" fontsize = 8]
 symbol_a [label = "a" fontname = "Times-Italic" shape = box]
-node58 -> symbol_a [label = "name" fontsize = 8]
-node59 -> node58 [label = "right" fontsize = 8]
-node60 -> node59 [label = "condition" fontsize = 8]
-node61 -> node60 [label = "second" fontsize = 8]
-node62 -> node61 [label = "body" fontsize = 8]
-node63 -> node62 [label = "_else" fontsize = 8]
-node64 -> node63 [label = "second" fontsize = 8]
-node65 -> node64 [label = "second" fontsize = 8]
-node66 -> node65 [label = "body" fontsize = 8]
-node99 -> node66 [label = "body" fontsize = 8]
-node98 [ label = "MethodDeclaration"];
-node67 [ label = "VoidTypeExpression"];
-node98 -> node67 [label = "returnType" fontsize = 8]
-symbol_main [label = "main" fontname = "Times-Italic" shape = box]
-node98 -> symbol_main [label = "name" fontsize = 8]
-node88 [ label = "LocalScope"];
-node87 [ label = "CommandSeq"];
-node70 [ label = "LocalDeclaration"];
-node68 [ label = "ClassTypeExpression"];
-symbol_MyClass [label = "MyClass" fontname = "Times-Italic" shape = box]
-node68 -> symbol_MyClass [label = "name" fontsize = 8]
-node70 -> node68 [label = "type" fontsize = 8]
-symbol_m [label = "m" fontname = "Times-Italic" shape = box]
-node70 -> symbol_m [label = "name" fontsize = 8]
-node69 [ label = "NewObject"];
-symbol_MyClass [label = "MyClass" fontname = "Times-Italic" shape = box]
-node69 -> symbol_MyClass [label = "className" fontsize = 8]
-node70 -> node69 [label = "initialiser" fontsize = 8]
-node87 -> node70 [label = "first" fontsize = 8]
-node86 [ label = "CommandSeq"];
-node74 [ label = "LocalDeclaration"];
-node71 [ label = "IntTypeExpression"];
-node74 -> node71 [label = "type" fontsize = 8]
-symbol_io [label = "io" fontname = "Times-Italic" shape = box]
-node74 -> symbol_io [label = "name" fontsize = 8]
-node73 [ label = "FieldAccess"];
-node72 [ label = "Variable"];
-symbol_m [label = "m" fontname = "Times-Italic" shape = box]
-node72 -> symbol_m [label = "name" fontsize = 8]
-node73 -> node72 [label = "receiver" fontsize = 8]
+node66 -> symbol_a [label = "name" fontsize = 8]
+node68 -> node66 [label = "lvalue" fontsize = 8]
+node67 [ label = "IntLiteral [int]: 0"];
+node68 -> node67 [label = "rvalue" fontsize = 8]
+node86 -> node68 [label = "initialisation" fontsize = 8]
+node72 [ label = "LessThanOrEqual [boolean]"];
+node70 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node69 [ label = "Variable [MyClass]"];
+symbol_this [label = "this" fontname = "Times-Italic" shape = box]
+node69 -> symbol_this [label = "name" fontsize = 8]
+node70 -> node69 [label = "receiver" fontsize = 8]
 symbol_a [label = "a" fontname = "Times-Italic" shape = box]
-node73 -> symbol_a [label = "name" fontsize = 8]
-node74 -> node73 [label = "initialiser" fontsize = 8]
-node86 -> node74 [label = "first" fontsize = 8]
-node85 [ label = "CommandSeq"];
-node76 [ label = "MethodCallCommand"];
-node75 [ label = "StringLiteral: ciao"];
+node70 -> symbol_a [label = "name" fontsize = 8]
+node72 -> node70 [label = "left" fontsize = 8]
+node71 [ label = "IntLiteral [int]: 11"];
+node72 -> node71 [label = "right" fontsize = 8]
+node86 -> node72 [label = "condition" fontsize = 8]
+node79 [ label = "Assignment"];
+node74 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node73 [ label = "Variable [MyClass]"];
+symbol_this [label = "this" fontname = "Times-Italic" shape = box]
+node73 -> symbol_this [label = "name" fontsize = 8]
+node74 -> node73 [label = "receiver" fontsize = 8]
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node74 -> symbol_a [label = "name" fontsize = 8]
+node79 -> node74 [label = "lvalue" fontsize = 8]
+node78 [ label = "Addition [int]"];
+node76 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node75 [ label = "Variable [MyClass]"];
+symbol_this [label = "this" fontname = "Times-Italic" shape = box]
+node75 -> symbol_this [label = "name" fontsize = 8]
 node76 -> node75 [label = "receiver" fontsize = 8]
-symbol_output [label = "output" fontname = "Times-Italic" shape = box]
-node76 -> symbol_output [label = "name" fontsize = 8]
-node85 -> node76 [label = "first" fontsize = 8]
-node84 [ label = "IfThenElse"];
-node79 [ label = "Equal"];
-node77 [ label = "IntLiteral: 1"];
-node79 -> node77 [label = "left" fontsize = 8]
-node78 [ label = "IntLiteral: 0"];
-node79 -> node78 [label = "right" fontsize = 8]
-node84 -> node79 [label = "condition" fontsize = 8]
-node82 [ label = "LocalScope"];
-node81 [ label = "MethodCallCommand"];
-node80 [ label = "StringLiteral: mai stampato"];
-node81 -> node80 [label = "receiver" fontsize = 8]
-symbol_output [label = "output" fontname = "Times-Italic" shape = box]
-node81 -> symbol_output [label = "name" fontsize = 8]
-node82 -> node81 [label = "body" fontsize = 8]
-node84 -> node82 [label = "then" fontsize = 8]
-node83 [ label = "Skip"];
-node84 -> node83 [label = "_else" fontsize = 8]
-node85 -> node84 [label = "second" fontsize = 8]
-node86 -> node85 [label = "second" fontsize = 8]
-node87 -> node86 [label = "second" fontsize = 8]
-node88 -> node87 [label = "body" fontsize = 8]
-node98 -> node88 [label = "body" fontsize = 8]
-node97 [ label = "MethodDeclaration"];
-node89 [ label = "VoidTypeExpression"];
-node97 -> node89 [label = "returnType" fontsize = 8]
-symbol_prova [label = "prova" fontname = "Times-Italic" shape = box]
-node97 -> symbol_prova [label = "name" fontsize = 8]
-node96 [ label = "LocalScope"];
-node95 [ label = "CommandSeq"];
-node90 [ label = "Return"];
-node95 -> node90 [label = "first" fontsize = 8]
-node94 [ label = "Assignment"];
-node92 [ label = "FieldAccess"];
-node91 [ label = "Variable"];
-symbol_this [label = "this" fontname = "Times-Italic" shape = box]
-node91 -> symbol_this [label = "name" fontsize = 8]
-node92 -> node91 [label = "receiver" fontsize = 8]
 symbol_a [label = "a" fontname = "Times-Italic" shape = box]
-node92 -> symbol_a [label = "name" fontsize = 8]
-node94 -> node92 [label = "lvalue" fontsize = 8]
-node93 [ label = "IntLiteral: 1"];
-node94 -> node93 [label = "rvalue" fontsize = 8]
-node95 -> node94 [label = "second" fontsize = 8]
-node96 -> node95 [label = "body" fontsize = 8]
-node97 -> node96 [label = "body" fontsize = 8]
-node98 -> node97 [label = "next" fontsize = 8 style = bold]
-node99 -> node98 [label = "next" fontsize = 8 style = bold]
-node100 -> node99 [label = "next" fontsize = 8 style = bold]
-node101 -> node100 [label = "next" fontsize = 8 style = bold]
-node102 -> node101 [label = "next" fontsize = 8 style = bold]
-node103 -> node102 [label = "next" fontsize = 8 style = bold]
-node104 -> node103 [label = "next" fontsize = 8 style = bold]
-node105 -> node104 [label = "next" fontsize = 8 style = bold]
-node106 -> node105 [label = "next" fontsize = 8 style = bold]
-node107 -> node106 [label = "declarations" fontsize = 8]
+node76 -> symbol_a [label = "name" fontsize = 8]
+node78 -> node76 [label = "left" fontsize = 8]
+node77 [ label = "IntLiteral [int]: 1"];
+node78 -> node77 [label = "right" fontsize = 8]
+node79 -> node78 [label = "rvalue" fontsize = 8]
+node86 -> node79 [label = "update" fontsize = 8]
+node85 [ label = "LocalScope"];
+node84 [ label = "Assignment"];
+node80 [ label = "Variable [int]"];
+symbol_c [label = "c" fontname = "Times-Italic" shape = box]
+node80 -> symbol_c [label = "name" fontsize = 8]
+node84 -> node80 [label = "lvalue" fontsize = 8]
+node83 [ label = "Addition [int]"];
+node81 [ label = "Variable [int]"];
+symbol_c [label = "c" fontname = "Times-Italic" shape = box]
+node81 -> symbol_c [label = "name" fontsize = 8]
+node83 -> node81 [label = "left" fontsize = 8]
+node82 [ label = "IntLiteral [int]: 1"];
+node83 -> node82 [label = "right" fontsize = 8]
+node84 -> node83 [label = "rvalue" fontsize = 8]
+node85 -> node84 [label = "body" fontsize = 8]
+node86 -> node85 [label = "body" fontsize = 8]
+node92 -> node86 [label = "first" fontsize = 8]
+node91 [ label = "Assert"];
+node90 [ label = "LessThan [boolean]"];
+node87 [ label = "Variable [int]"];
+symbol_c [label = "c" fontname = "Times-Italic" shape = box]
+node87 -> symbol_c [label = "name" fontsize = 8]
+node90 -> node87 [label = "left" fontsize = 8]
+node89 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node88 [ label = "Variable [MyClass]"];
+symbol_this [label = "this" fontname = "Times-Italic" shape = box]
+node88 -> symbol_this [label = "name" fontsize = 8]
+node89 -> node88 [label = "receiver" fontsize = 8]
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node89 -> symbol_a [label = "name" fontsize = 8]
+node90 -> node89 [label = "right" fontsize = 8]
+node91 -> node90 [label = "condition" fontsize = 8]
+node92 -> node91 [label = "second" fontsize = 8]
+node93 -> node92 [label = "second" fontsize = 8]
+node94 -> node93 [label = "body" fontsize = 8]
+node151 -> node94 [label = "body" fontsize = 8]
+node150 [ label = "TestDeclaration"];
+symbol_somma [label = "somma" fontname = "Times-Italic" shape = box]
+node150 -> symbol_somma [label = "name" fontsize = 8]
+node113 [ label = "LocalScope"];
+node112 [ label = "CommandSeq"];
+node97 [ label = "LocalDeclaration"];
+node95 [ label = "ClassTypeExpression [MyCalculator]"];
+symbol_MyCalculator [label = "MyCalculator" fontname = "Times-Italic" shape = box]
+node95 -> symbol_MyCalculator [label = "name" fontsize = 8]
+node97 -> node95 [label = "type" fontsize = 8]
+symbol_calc [label = "calc" fontname = "Times-Italic" shape = box]
+node97 -> symbol_calc [label = "name" fontsize = 8]
+node96 [ label = "NewObject [MyCalculator]\nreferences MyCalculator()"];
+symbol_MyCalculator [label = "MyCalculator" fontname = "Times-Italic" shape = box]
+node96 -> symbol_MyCalculator [label = "className" fontsize = 8]
+node97 -> node96 [label = "initialiser" fontsize = 8]
+node112 -> node97 [label = "first" fontsize = 8]
+node111 [ label = "CommandSeq"];
+node106 [ label = "LocalDeclaration"];
+node98 [ label = "IntTypeExpression [int]"];
+node106 -> node98 [label = "type" fontsize = 8]
+symbol_res [label = "res" fontname = "Times-Italic" shape = box]
+node106 -> symbol_res [label = "name" fontsize = 8]
+node105 [ label = "MethodCallExpression [int]\nreferences MyCalculator.add(int,int):int"];
+node99 [ label = "Variable [MyCalculator]"];
+symbol_calc [label = "calc" fontname = "Times-Italic" shape = box]
+node99 -> symbol_calc [label = "name" fontsize = 8]
+node105 -> node99 [label = "receiver" fontsize = 8]
+symbol_add [label = "add" fontname = "Times-Italic" shape = box]
+node105 -> symbol_add [label = "name" fontsize = 8]
+node104 [ label = "ExpressionSeq"];
+node101 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node100 [ label = "Variable [MyClass]"];
+symbol_this [label = "this" fontname = "Times-Italic" shape = box]
+node100 -> symbol_this [label = "name" fontsize = 8]
+node101 -> node100 [label = "receiver" fontsize = 8]
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node101 -> symbol_a [label = "name" fontsize = 8]
+node104 -> node101 [label = "head" fontsize = 8]
+node103 [ label = "ExpressionSeq"];
+node102 [ label = "IntLiteral [int]: 10"];
+node103 -> node102 [label = "head" fontsize = 8]
+node104 -> node103 [label = "tail" fontsize = 8 style = bold]
+node105 -> node104 [label = "actuals" fontsize = 8]
+node106 -> node105 [label = "initialiser" fontsize = 8]
+node111 -> node106 [label = "first" fontsize = 8]
+node110 [ label = "Assert"];
+node109 [ label = "Equal [boolean]"];
+node107 [ label = "Variable [int]"];
+symbol_res [label = "res" fontname = "Times-Italic" shape = box]
+node107 -> symbol_res [label = "name" fontsize = 8]
+node109 -> node107 [label = "left" fontsize = 8]
+node108 [ label = "IntLiteral [int]: 20"];
+node109 -> node108 [label = "right" fontsize = 8]
+node110 -> node109 [label = "condition" fontsize = 8]
+node111 -> node110 [label = "second" fontsize = 8]
+node112 -> node111 [label = "second" fontsize = 8]
+node113 -> node112 [label = "body" fontsize = 8]
+node150 -> node113 [label = "body" fontsize = 8]
+node149 [ label = "MethodDeclaration"];
+node114 [ label = "VoidTypeExpression [void]"];
+node149 -> node114 [label = "returnType" fontsize = 8]
+symbol_main [label = "main" fontname = "Times-Italic" shape = box]
+node149 -> symbol_main [label = "name" fontsize = 8]
+node148 [ label = "LocalScope"];
+node147 [ label = "CommandSeq"];
+node117 [ label = "LocalDeclaration"];
+node115 [ label = "ClassTypeExpression [MyClass]"];
+symbol_MyClass [label = "MyClass" fontname = "Times-Italic" shape = box]
+node115 -> symbol_MyClass [label = "name" fontsize = 8]
+node117 -> node115 [label = "type" fontsize = 8]
+symbol_m [label = "m" fontname = "Times-Italic" shape = box]
+node117 -> symbol_m [label = "name" fontsize = 8]
+node116 [ label = "NewObject [MyClass]\nreferences MyClass()"];
+symbol_MyClass [label = "MyClass" fontname = "Times-Italic" shape = box]
+node116 -> symbol_MyClass [label = "className" fontsize = 8]
+node117 -> node116 [label = "initialiser" fontsize = 8]
+node147 -> node117 [label = "first" fontsize = 8]
+node146 [ label = "CommandSeq"];
+node120 [ label = "LocalDeclaration"];
+node118 [ label = "ClassTypeExpression [MyCalculator]"];
+symbol_MyCalculator [label = "MyCalculator" fontname = "Times-Italic" shape = box]
+node118 -> symbol_MyCalculator [label = "name" fontsize = 8]
+node120 -> node118 [label = "type" fontsize = 8]
+symbol_c [label = "c" fontname = "Times-Italic" shape = box]
+node120 -> symbol_c [label = "name" fontsize = 8]
+node119 [ label = "NewObject [MyCalculator]\nreferences MyCalculator()"];
+symbol_MyCalculator [label = "MyCalculator" fontname = "Times-Italic" shape = box]
+node119 -> symbol_MyCalculator [label = "className" fontsize = 8]
+node120 -> node119 [label = "initialiser" fontsize = 8]
+node146 -> node120 [label = "first" fontsize = 8]
+node145 [ label = "CommandSeq"];
+node123 [ label = "LocalDeclaration"];
+node121 [ label = "ClassTypeExpression [String]"];
+symbol_String [label = "String" fontname = "Times-Italic" shape = box]
+node121 -> symbol_String [label = "name" fontsize = 8]
+node123 -> node121 [label = "type" fontsize = 8]
+symbol_res [label = "res" fontname = "Times-Italic" shape = box]
+node123 -> symbol_res [label = "name" fontsize = 8]
+node122 [ label = "StringLiteral [String]: The result is: "];
+node123 -> node122 [label = "initialiser" fontsize = 8]
+node145 -> node123 [label = "first" fontsize = 8]
+node144 [ label = "CommandSeq"];
+node133 [ label = "Assignment"];
+node125 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node124 [ label = "Variable [MyClass]"];
+symbol_m [label = "m" fontname = "Times-Italic" shape = box]
+node124 -> symbol_m [label = "name" fontsize = 8]
+node125 -> node124 [label = "receiver" fontsize = 8]
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node125 -> symbol_a [label = "name" fontsize = 8]
+node133 -> node125 [label = "lvalue" fontsize = 8]
+node132 [ label = "MethodCallExpression [int]\nreferences MyCalculator.add(int,int):int"];
+node126 [ label = "Variable [MyCalculator]"];
+symbol_c [label = "c" fontname = "Times-Italic" shape = box]
+node126 -> symbol_c [label = "name" fontsize = 8]
+node132 -> node126 [label = "receiver" fontsize = 8]
+symbol_add [label = "add" fontname = "Times-Italic" shape = box]
+node132 -> symbol_add [label = "name" fontsize = 8]
+node131 [ label = "ExpressionSeq"];
+node128 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node127 [ label = "Variable [MyClass]"];
+symbol_m [label = "m" fontname = "Times-Italic" shape = box]
+node127 -> symbol_m [label = "name" fontsize = 8]
+node128 -> node127 [label = "receiver" fontsize = 8]
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node128 -> symbol_a [label = "name" fontsize = 8]
+node131 -> node128 [label = "head" fontsize = 8]
+node130 [ label = "ExpressionSeq"];
+node129 [ label = "IntLiteral [int]: 10"];
+node130 -> node129 [label = "head" fontsize = 8]
+node131 -> node130 [label = "tail" fontsize = 8 style = bold]
+node132 -> node131 [label = "actuals" fontsize = 8]
+node133 -> node132 [label = "rvalue" fontsize = 8]
+node144 -> node133 [label = "first" fontsize = 8]
+node143 [ label = "CommandSeq"];
+node140 [ label = "Assignment"];
+node134 [ label = "Variable [String]"];
+symbol_res [label = "res" fontname = "Times-Italic" shape = box]
+node134 -> symbol_res [label = "name" fontsize = 8]
+node140 -> node134 [label = "lvalue" fontsize = 8]
+node139 [ label = "MethodCallExpression [String]\nreferences String.concat(int):String"];
+node135 [ label = "Variable [String]"];
+symbol_res [label = "res" fontname = "Times-Italic" shape = box]
+node135 -> symbol_res [label = "name" fontsize = 8]
+node139 -> node135 [label = "receiver" fontsize = 8]
+symbol_concat [label = "concat" fontname = "Times-Italic" shape = box]
+node139 -> symbol_concat [label = "name" fontsize = 8]
+node138 [ label = "ExpressionSeq"];
+node137 [ label = "FieldAccess [int]\nreferences MyClass.a:int"];
+node136 [ label = "Variable [MyClass]"];
+symbol_m [label = "m" fontname = "Times-Italic" shape = box]
+node136 -> symbol_m [label = "name" fontsize = 8]
+node137 -> node136 [label = "receiver" fontsize = 8]
+symbol_a [label = "a" fontname = "Times-Italic" shape = box]
+node137 -> symbol_a [label = "name" fontsize = 8]
+node138 -> node137 [label = "head" fontsize = 8]
+node139 -> node138 [label = "actuals" fontsize = 8]
+node140 -> node139 [label = "rvalue" fontsize = 8]
+node143 -> node140 [label = "first" fontsize = 8]
+node142 [ label = "MethodCallCommand\nreferences String.output():void"];
+node141 [ label = "Variable [String]"];
+symbol_res [label = "res" fontname = "Times-Italic" shape = box]
+node141 -> symbol_res [label = "name" fontsize = 8]
+node142 -> node141 [label = "receiver" fontsize = 8]
+symbol_output [label = "output" fontname = "Times-Italic" shape = box]
+node142 -> symbol_output [label = "name" fontsize = 8]
+node143 -> node142 [label = "second" fontsize = 8]
+node144 -> node143 [label = "second" fontsize = 8]
+node145 -> node144 [label = "second" fontsize = 8]
+node146 -> node145 [label = "second" fontsize = 8]
+node147 -> node146 [label = "second" fontsize = 8]
+node148 -> node147 [label = "body" fontsize = 8]
+node149 -> node148 [label = "body" fontsize = 8]
+node150 -> node149 [label = "next" fontsize = 8 style = bold]
+node151 -> node150 [label = "next" fontsize = 8 style = bold]
+node152 -> node151 [label = "next" fontsize = 8 style = bold]
+node153 -> node152 [label = "next" fontsize = 8 style = bold]
+node154 -> node153 [label = "next" fontsize = 8 style = bold]
+node155 -> node154 [label = "next" fontsize = 8 style = bold]
+node156 -> node155 [label = "next" fontsize = 8 style = bold]
+node157 -> node156 [label = "next" fontsize = 8 style = bold]
+node158 -> node157 [label = "next" fontsize = 8 style = bold]
+node159 -> node158 [label = "next" fontsize = 8 style = bold]
+node160 -> node159 [label = "declarations" fontsize = 8]
 }

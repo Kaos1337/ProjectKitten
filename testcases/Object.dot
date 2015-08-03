@@ -1,13 +1,13 @@
 digraph Object {
 size = "11,7.5";
 rotate = 90
-node30 [ label = "ClassDefinition"];
+node218 [ label = "ClassDefinition"];
 symbol_Object [label = "Object" fontname = "Times-Italic" shape = box]
-node30 -> symbol_Object [label = "name" fontsize = 8]
+node218 -> symbol_Object [label = "name" fontsize = 8]
 symbol_Object [label = "Object" fontname = "Times-Italic" shape = box]
-node30 -> symbol_Object [label = "superclassName" fontsize = 8]
-node29 [ label = "ConstructorDeclaration"];
-node28 [ label = "Skip"];
-node29 -> node28 [label = "body" fontsize = 8]
-node30 -> node29 [label = "declarations" fontsize = 8]
+node218 -> symbol_Object [label = "superclassName" fontsize = 8]
+node217 [ label = "ConstructorDeclaration"];
+node216 [ label = "Skip"];
+node217 -> node216 [label = "body" fontsize = 8]
+node218 -> node217 [label = "declarations" fontsize = 8]
 }

@@ -34,7 +34,7 @@ public class Main {
 					+ "ms]");
 
 			time = System.currentTimeMillis();
-			// program.dumpCodeDot();
+			program.dumpCodeDot();
 
 			System.out.println("Kitten bytecode dumping in dot format completed\t["
 					+ (System.currentTimeMillis() - time) + "ms]");
@@ -50,14 +50,6 @@ public class Main {
 
 			ArrayList<String> testslist = new ArrayList<String>();
 			program.generateJavaBytecodeForTests(testslist);
-			/*for (String s : testslist)
-				try {
-					Runtime.getRuntime().exec("java " + s).waitFor();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}*/
 
 			System.out.println("Java TEST bytecode generation completed       \t["
 					+ (System.currentTimeMillis() - time) + "ms]");
